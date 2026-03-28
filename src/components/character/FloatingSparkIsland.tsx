@@ -38,11 +38,10 @@ const FloatingSparkCore: React.FC = () => {
 
     // Track scroll direction
     const onScroll = () => {
-      const st = main ? main.scrollTop : window.scrollY;
+      const st = window.scrollY;
       scrollingDown.current = st > lastScrollTop.current;
       lastScrollTop.current = st;
     };
-    main?.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('scroll', onScroll, { passive: true });
 
     // Hero: fires on ANY visibility — immediately restores full size
@@ -66,7 +65,7 @@ const FloatingSparkCore: React.FC = () => {
         },
         {
           threshold: [0.01, 0.1, 0.3, 0.5, 0.8, 1.0],
-          root: main,
+          root: null,
         }
       );
       heroObserver.observe(heroEl);
@@ -97,7 +96,7 @@ const FloatingSparkCore: React.FC = () => {
         },
         {
           threshold: [0.4, 0.6],
-          root: main,
+          root: null,
         }
       );
 
@@ -107,7 +106,6 @@ const FloatingSparkCore: React.FC = () => {
 
     return () => {
       observers.forEach((o) => o.disconnect());
-      main?.removeEventListener('scroll', onScroll);
       window.removeEventListener('scroll', onScroll);
     };
   }, []);
@@ -115,17 +113,13 @@ const FloatingSparkCore: React.FC = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
-    const main = document.getElementById('main');
     const onScroll = () => {
-      const el = main ?? document.documentElement;
-      const scrollTop = main ? main.scrollTop : window.scrollY;
-      const scrollHeight = main ? main.scrollHeight - main.clientHeight : document.documentElement.scrollHeight - window.innerHeight;
+      const scrollTop = window.scrollY;
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
       setScrollProgress(scrollHeight > 0 ? scrollTop / scrollHeight : 0);
     };
-    main?.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => {
-      main?.removeEventListener('scroll', onScroll);
       window.removeEventListener('scroll', onScroll);
     };
   }, []);
