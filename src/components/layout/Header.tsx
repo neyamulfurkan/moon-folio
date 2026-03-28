@@ -134,23 +134,33 @@ export const Header: React.FC<HeaderProps> = ({ cvUrl, githubUrl }) => {
     };
   }, [mobileMenuOpen]);
 
+  const scrollToSection = useCallback(
+    (sectionId: string): void => {
+      const sectionOrder = ['hero', 'about', 'skills', 'projects', 'experience', 'contact'];
+      const index = sectionOrder.indexOf(sectionId);
+      if (index === -1) return;
+      const scrollTop = index * window.innerHeight;
+      window.scrollTo({ top: scrollTop, behavior: isReduced ? 'auto' : 'smooth' });
+    },
+    [isReduced]
+  );
+
   const handleNavClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>, href: string): void => {
       e.preventDefault();
-      const target = document.querySelector(href);
-      target?.scrollIntoView({ behavior: isReduced ? 'auto' : 'smooth' });
+      const sectionId = href.replace('#', '');
+      scrollToSection(sectionId);
       setMobileMenuOpen(false);
     },
-    [isReduced]
+    [scrollToSection]
   );
 
   const handleLogoClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>): void => {
       e.preventDefault();
-      const target = document.getElementById('hero');
-      target?.scrollIntoView({ behavior: isReduced ? 'auto' : 'smooth' });
+      scrollToSection('hero');
     },
-    [isReduced]
+    [scrollToSection]
   );
 
   const toggleMobileMenu = useCallback((): void => {

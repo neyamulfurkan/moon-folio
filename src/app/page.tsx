@@ -128,8 +128,7 @@ export default async function Home(): Promise<React.ReactElement> {
   const hardwareCount = projects.filter((p) => p.category === 'hardware').length;
 
   return (
-    <main id="main" style={{ overflowX: 'hidden', overflowY: 'scroll', height: '100vh', position: 'relative', scrollSnapType: 'y proximity' }}>
-      ayout.tsx
+    <main id="main">
       <HeroSection scenes={effectiveHeroScenes} cvUrl={cvUrl} />
       <AboutSection stats={{ projects: projects.length, years: 3, hardwareProjects: hardwareCount }} />
       <SkillsSection skills={skills} />
