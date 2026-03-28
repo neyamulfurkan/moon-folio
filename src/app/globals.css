@@ -1,0 +1,242 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Background colors */
+  --color-bg-primary: #07090f;
+  --color-bg-secondary: #0d1117;
+  --color-bg-tertiary: #141b24;
+  --color-bg-elevated: #1a2433;
+
+  /* Text colors */
+  --color-text-primary: #f0f4ff;
+  --color-text-secondary: #6a7a9a;
+  --color-text-tertiary: #3d4a5e;
+
+  /* Border colors */
+  --color-border-subtle: rgba(255, 255, 255, 0.03);
+  --color-border-default: rgba(255, 255, 255, 0.06);
+  --color-border-strong: rgba(255, 255, 255, 0.12);
+
+  /* Accent & electric colors */
+  --color-accent: #00d4ff;
+  --color-accent-dim: rgba(0, 212, 255, 0.12);
+  --color-accent-glow: rgba(0, 212, 255, 0.25);
+  --color-electric: #ffe535;
+  --color-amber: #e8880a;
+
+  /* Status colors */
+  --color-success: #22c55e;
+  --color-danger: #ef4444;
+
+  /* Character — skin */
+  --char-skin-base: #c68642;
+  --char-skin-shadow: #b07030;
+
+  /* Character — hair & clothing */
+  --char-hair: #1a1008;
+  --char-hoodie: #1e2a3a;
+  --char-hoodie-trace: #263547;
+
+  /* Character — glasses */
+  --char-glasses-frame: #0d0d0d;
+  --char-glasses-lens: rgba(0, 0, 0, 0.65);
+
+  /* Character — desk & furniture */
+  --char-desk: #2a1f14;
+  --char-desk-grain: #3a2a1a;
+  --char-stool: #8b5e3c;
+  --char-stool-leg: #5a3c20;
+
+  /* Character — PC & tech */
+  --char-pc-bezel: #1a1a1a;
+  --char-monitor-glow: rgba(100, 200, 255, 0.15);
+
+  /* Character — wire */
+  --char-wire: #2a1f0a;
+  --char-wire-tip: #e8880a;
+
+  /* Typography */
+  --font-display: 'Syne', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  /* Text scale */
+  --text-xs: 0.6875rem;   /* 11px */
+  --text-sm: 0.8125rem;   /* 13px */
+  --text-base: 0.875rem;  /* 14px */
+  --text-md: 1rem;        /* 16px */
+  --text-lg: 1.125rem;    /* 18px */
+  --text-xl: 1.25rem;     /* 20px */
+  --text-2xl: 1.5rem;     /* 24px */
+  --text-3xl: 2rem;       /* 32px */
+  --text-4xl: 2.5rem;     /* 40px */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: none;
+}
+
+
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--color-accent-dim);
+  color: var(--color-text-primary);
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+  border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+  body {
+    cursor: auto;
+  }
+}
+
+@keyframes rain-drop {
+  0% { transform: translateY(-10px); opacity: 0; }
+  10% { opacity: 0.4; }
+  90% { opacity: 0.15; }
+  100% { transform: translateY(64px); opacity: 0; }
+}
+
+@keyframes shock-flash {
+  0% { opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 0.8; }
+  100% { opacity: 0; }
+}
+
+@keyframes lightning-bolt {
+  0%, 100% { opacity: 0; }
+  10%, 30% { opacity: 1; }
+  20% { opacity: 0.3; }
+  40% { opacity: 0; }
+}
+
+.header-rain {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.floating-spark-island {
+  pointer-events: none;
+}
+
+.spark-shock-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(ellipse 60% 80% at 60% 40%, rgba(255,229,53,0.18) 0%, rgba(0,212,255,0.08) 40%, transparent 70%);
+  opacity: 0;
+  transition: opacity 80ms ease;
+}
+
+.spark-shock-overlay.active {
+  opacity: 1;
+}
+
+.header-rain::before,
+.header-rain::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px,
+      transparent 4px,
+      rgba(0, 212, 255, 0.06) 4px,
+      rgba(0, 212, 255, 0.06) 5px
+    );
+  background-size: 3px 64px;
+  animation: rain-drop 1.8s linear infinite;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.header-rain::after {
+  background-size: 5px 48px;
+  animation-delay: -0.9s;
+  animation-duration: 2.4s;
+}
+
+.header-scrolled .header-rain::before,
+.header-scrolled .header-rain::after {
+  opacity: 1;
+}
+
+@keyframes hair-shocked-fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes electric-spark {
+  0%, 100% { opacity: 0; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.hair-shocked-group {
+  transition: opacity 60ms ease-in;
+}
+
+.hair-idle-group {
+  transition: opacity 400ms ease-out;
+}
+
+@keyframes wire-pulse {
+  0%   { offset-distance: 0%;   opacity: 0; }
+  5%   { opacity: 0.95; }
+  90%  { opacity: 0.95; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

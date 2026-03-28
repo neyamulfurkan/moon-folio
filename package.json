@@ -1,0 +1,58 @@
+{
+  "name": "moon-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:push": "prisma db push",
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio",
+    "db:generate": "prisma generate"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@dnd-kit/core": "latest",
+    "@dnd-kit/sortable": "latest",
+    "@neondatabase/serverless": "latest",
+    "@prisma/client": "^5.0.0",
+    "@tiptap/react": "latest",
+    "@tiptap/starter-kit": "latest",
+    "bcryptjs": "latest",
+    "cloudinary": "latest",
+    "clsx": "latest",
+    "framer-motion": "^11.0.0",
+    "groq-sdk": "latest",
+    "isomorphic-dompurify": "latest",
+    "next": "^14.2.0",
+    "next-auth": "^5.0.0-beta.30",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "resend": "latest",
+    "server-only": "latest",
+    "tailwind-merge": "latest",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.0.0",
+    "zod": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "latest",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "autoprefixer": "latest",
+    "eslint": "latest",
+    "eslint-config-next": "^14.0.0",
+    "postcss": "latest",
+    "prisma": "^5.0.0",
+    "ts-node": "latest",
+    "tsx": "^4.21.0"
+  }
+}
