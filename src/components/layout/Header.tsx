@@ -35,44 +35,23 @@ export const Header: React.FC<HeaderProps> = ({ cvUrl, githubUrl }) => {
   const firstFocusableRef = useRef<HTMLAnchorElement>(null);
   const lastFocusableRef = useRef<HTMLButtonElement>(null);
 
-  // Section observer
+  // Section tracker based on scroll position
   useEffect(() => {
-    const sectionIds = NAV_LINKS.map((l) => l.sectionId);
-    const ratios: Record<string, number> = {};
+    const sectionOrder = ['hero', 'about', 'skills', 'projects', 'experience', 'contact'];
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          ratios[entry.target.id] = entry.intersectionRatio;
-        });
+    const handleScroll = (): void => {
+      const index = Math.round(window.scrollY / window.innerHeight);
+      const clampedIndex = Math.max(0, Math.min(index, sectionOrder.length - 1));
+      const activeId = sectionOrder[clampedIndex];
+      if (activeId !== undefined) {
+        setActiveSection(activeId === 'hero' ? null : activeId);
+      }
+    };
 
-        let maxRatio = 0;
-        let mostVisible: string | null = null;
-        // Prefer lower section on tie
-        for (let i = sectionIds.length - 1; i >= 0; i--) {
-          const id = sectionIds[i];
-          if (id !== undefined) {
-            const ratio = ratios[id] ?? 0;
-            if (ratio >= maxRatio) {
-              maxRatio = ratio;
-              mostVisible = id;
-            }
-          }
-        }
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
 
-        if (maxRatio > 0) {
-          setActiveSection(mostVisible);
-        }
-      },
-      { threshold: [0.2, 0.5, 0.8] }
-    );
-
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Close mobile menu on Escape
