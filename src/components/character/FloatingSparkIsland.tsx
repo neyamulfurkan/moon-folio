@@ -33,79 +33,25 @@ const FloatingSparkCore: React.FC = () => {
   const scrollingDown = useRef(true);
 
   useEffect(() => {
-    const observers: IntersectionObserver[] = [];
-    const main = document.getElementById('main');
+    const sectionOrder = ['hero', 'about', 'skills', 'projects', 'experience', 'contact'] as const;
 
-    // Track scroll direction
     const onScroll = () => {
-      const st = window.scrollY;
-      scrollingDown.current = st > lastScrollTop.current;
-      lastScrollTop.current = st;
+      const index = Math.round(window.scrollY / window.innerHeight);
+      const clampedIndex = Math.max(0, Math.min(index, sectionOrder.length - 1));
+      const id = sectionOrder[clampedIndex];
+      if (!id) return;
+      if (currentSectionRef.current !== id) {
+        currentSectionRef.current = id;
+        setCurrentSection(id);
+        const target = SECTION_POSITIONS[id];
+        if (target) setPos(target);
+      }
     };
+
     window.addEventListener('scroll', onScroll, { passive: true });
-
-    // Hero: fires on ANY visibility — immediately restores full size
-    const heroEl = document.getElementById('hero');
-    if (heroEl) {
-      const heroObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            // Only restore hero if scrolling UP or at very top
-            if (entry.isIntersecting && !scrollingDown.current) {
-              currentSectionRef.current = 'hero';
-              setCurrentSection('hero');
-              setPos(SECTION_POSITIONS['hero']!);
-            }
-            if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-              currentSectionRef.current = 'hero';
-              setCurrentSection('hero');
-              setPos(SECTION_POSITIONS['hero']!);
-            }
-          });
-        },
-        {
-          threshold: [0.01, 0.1, 0.3, 0.5, 0.8, 1.0],
-          root: null,
-        }
-      );
-      heroObserver.observe(heroEl);
-      observers.push(heroObserver);
-    }
-
-    // Non-hero: only activate when scrolling DOWN and well into view
-    SECTION_IDS.filter((id) => id !== 'hero').forEach((id) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (
-              entry.isIntersecting &&
-              entry.intersectionRatio >= 0.4 &&
-              scrollingDown.current
-            ) {
-              if (currentSectionRef.current !== id) {
-                currentSectionRef.current = id;
-                setCurrentSection(id);
-                const target = SECTION_POSITIONS[id];
-                if (target) setPos(target);
-              }
-            }
-          });
-        },
-        {
-          threshold: [0.4, 0.6],
-          root: null,
-        }
-      );
-
-      observer.observe(el);
-      observers.push(observer);
-    });
+    onScroll(); // set initial state
 
     return () => {
-      observers.forEach((o) => o.disconnect());
       window.removeEventListener('scroll', onScroll);
     };
   }, []);
