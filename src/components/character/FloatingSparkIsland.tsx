@@ -86,7 +86,7 @@ const FloatingSparkCore: React.FC = () => {
     skills:     { scale: 0.28, rightPx: -34, topPct: 18, opacity: 0.60 },
     projects:   { scale: 0.26, rightPx: -34, topPct: 18, opacity: 0.58 },
     experience: { scale: 0.24, rightPx: -34, topPct: 80, opacity: 0.55 },
-    contact:    { scale: 0.34, rightPx: -28, topPct: 65, opacity: 0.80 },
+   contact:    { scale: 0.28, rightPx: 260, topPct: 72, opacity: 0.60 },
   };
 
   const activePos = isMobile
