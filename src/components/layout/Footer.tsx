@@ -118,7 +118,7 @@ export const Footer: React.FC<FooterProps> = ({ socialLinks }) => {
     <footer
       data-footer=""
       style={{
-        minHeight: '300px',
+        minHeight: '420px',
         background: 'linear-gradient(180deg, #02080f 0%, #030a12 40%, #020608 100%)',
         borderTop: 'none',
         display: 'flex',
@@ -329,16 +329,27 @@ export const Footer: React.FC<FooterProps> = ({ socialLinks }) => {
         </path>
       </svg>
 
+      {/* Spark Character — left side */}
+      <div style={{
+        position: 'absolute',
+        left: '32px',
+        bottom: '80px',
+        zIndex: 4,
+        pointerEvents: 'auto',
+      }}>
+        <SparkCharacter size="footer" showChat={false} />
+      </div>
+
       {/* Water glow where Spark lands in footer */}
       <div style={{
         position: 'absolute',
-        bottom: '40px',
-        right: '6%',
-        width: '280px',
-        height: '60px',
-        background: 'radial-gradient(ellipse 100% 100% at 50% 50%, rgba(0,212,255,0.15) 0%, transparent 70%)',
+        bottom: '100px',
+        left: '40px',
+        width: '340px',
+        height: '80px',
+        background: 'radial-gradient(ellipse 100% 100% at 50% 50%, rgba(0,212,255,0.18) 0%, transparent 65%)',
         pointerEvents: 'none',
-        filter: 'blur(14px)',
+        filter: 'blur(16px)',
         zIndex: 3,
       }} />
 
