@@ -32,11 +32,12 @@ async function getSignedParams(folder: string): Promise<{
     const data = await res.json().catch(() => ({}));
     throw new Error((data as { error?: string }).error ?? 'Failed to get upload credentials');
   }
-  const json = await res.json() as { data: { signature: string; timestamp: number; apiKey: string; cloudName: string } };
-  if (!json.data?.cloudName) {
-    throw new Error('Cloudinary cloud name missing from server response. Check CLOUDINARY_CLOUD_NAME environment variable on the server.');
+  const json = await res.json() as { data?: { signature: string; timestamp: number; apiKey: string; cloudName: string }; signature?: string; timestamp?: number; apiKey?: string; cloudName?: string };
+  const params = json.data ?? (json as { signature: string; timestamp: number; apiKey: string; cloudName: string });
+  if (!params?.cloudName) {
+    throw new Error('Cloudinary cloud name missing from server response. Ensure CLOUDINARY_CLOUD_NAME is set in Vercel environment variables.');
   }
-  return json.data;
+  return params;
 }
 
 async function uploadToCloudinary(
