@@ -37,10 +37,14 @@ export const POST = async (request: Request): Promise<Response> => {
 
   try {
     const params = generateSignedUploadParams(folder);
-    return Response.json({ data: { ...params, cloudName: params.cloudName, folder } }, { status: 200 });
+    if (!params.cloudName || !params.apiKey || !params.signature) {
+      console.error('[upload] Cloudinary credentials incomplete — check CLOUDINARY_CLOUD_NAME (or NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME), CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET in Vercel environment variables');
+      return Response.json({ error: 'Cloudinary is not configured on the server. Add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET to your Vercel environment variables.' }, { status: 500 });
+    }
+    return Response.json({ data: { signature: params.signature, timestamp: params.timestamp, apiKey: params.apiKey, cloudName: params.cloudName, folder } }, { status: 200 });
   } catch (err) {
     console.error('[upload] Failed to generate signed upload params:', err);
-    return Response.json({ error: 'Failed to generate upload parameters' }, { status: 500 });
+    return Response.json({ error: err instanceof Error ? err.message : 'Failed to generate upload parameters' }, { status: 500 });
   }
 };
 

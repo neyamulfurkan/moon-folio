@@ -2,7 +2,7 @@ import 'server-only';
 import { v2 as cloudinary } from 'cloudinary';
 
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME ?? '',
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME ?? process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ?? '',
   api_key: process.env.CLOUDINARY_API_KEY ?? '',
   api_secret: process.env.CLOUDINARY_API_SECRET ?? '',
   secure: true,
@@ -51,7 +51,7 @@ export const generateSignedUploadParams = (
 ): { signature: string; timestamp: number; apiKey: string; cloudName: string } => {
   const apiKey = process.env.CLOUDINARY_API_KEY;
   const apiSecret = process.env.CLOUDINARY_API_SECRET;
-  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME ?? process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
   if (!apiKey || !apiSecret || !cloudName) {
     throw new Error(
