@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signIn } from '@/lib/auth';
+import { signIn } from 'next-auth/react';
 import { loginSchema } from '@/validations/admin';
 import { SITE_NAME } from '@/lib/constants';
 
