@@ -96,30 +96,7 @@ export default async function AdminLayout({
                   <a
                     key={href}
                     href={href}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "10px 20px",
-                      color: "var(--color-text-secondary)",
-                      textDecoration: "none",
-                      fontSize: "14px",
-                      fontWeight: 400,
-                      transition: "color 150ms, background-color 150ms",
-                      borderLeft: "2px solid transparent",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLAnchorElement).style.color =
-                        "var(--color-text-primary)";
-                      (e.currentTarget as HTMLAnchorElement).style.backgroundColor =
-                        "var(--color-bg-elevated)";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLAnchorElement).style.color =
-                        "var(--color-text-secondary)";
-                      (e.currentTarget as HTMLAnchorElement).style.backgroundColor =
-                        "transparent";
-                    }}
+                    className="admin-nav-link"
                   >
                     <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                       <span
@@ -187,31 +164,7 @@ export default async function AdminLayout({
               >
                 <button
                   type="submit"
-                  style={{
-                    width: "100%",
-                    padding: "8px 12px",
-                    backgroundColor: "transparent",
-                    border: "1px solid var(--color-border-strong)",
-                    borderRadius: "8px",
-                    color: "var(--color-text-secondary)",
-                    fontSize: "13px",
-                    cursor: "pointer",
-                    textAlign: "center",
-                    transition: "color 150ms, border-color 150ms",
-                    fontFamily: "var(--font-display)",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.color =
-                      "var(--color-text-primary)";
-                    (e.currentTarget as HTMLButtonElement).style.borderColor =
-                      "var(--color-accent)";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.color =
-                      "var(--color-text-secondary)";
-                    (e.currentTarget as HTMLButtonElement).style.borderColor =
-                      "var(--color-border-strong)";
-                  }}
+                  className="admin-signout-btn"
                 >
                   Sign Out
                 </button>
