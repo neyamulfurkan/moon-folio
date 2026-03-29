@@ -2,7 +2,7 @@ import { HeroSection } from '@/components/sections/HeroSection';
 // FloatingSparkIsland moved to layout.tsx
 import { AboutSection } from '@/components/sections/AboutSection';
 import { SkillsSection } from '@/components/sections/SkillsSection';
-import { ProjectsSection } from '@/components/sections/ProjectsSection';
+import { ProjectsSectionWrapper } from '@/components/sections/ProjectsSectionWrapper';
 import { ExperienceSection } from '@/components/sections/ExperienceSection';
 import { ContactSection } from '@/components/sections/ContactSection';
 import { Footer } from '@/components/layout/Footer';
@@ -132,7 +132,7 @@ export default async function Home(): Promise<React.ReactElement> {
       <HeroSection scenes={effectiveHeroScenes} cvUrl={cvUrl} />
       <AboutSection stats={{ projects: projects.length, years: 3, hardwareProjects: hardwareCount }} />
       <SkillsSection skills={skills} />
-      <ProjectsSection projects={projects} />
+       <ProjectsSectionWrapper projects={projects} />
       <ExperienceSection experience={experience} />
       <ContactSection />
       <div style={{ position: 'relative', zIndex: 70 }}>

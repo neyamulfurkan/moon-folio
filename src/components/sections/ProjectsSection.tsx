@@ -15,6 +15,9 @@ import type { ProjectSummary, Project } from '@/types/index';
 
 type ProjectsSectionProps = {
   projects: ProjectSummary[];
+  onOverlayOpen?: (project: Project) => void;
+  onOverlayClose?: () => void;
+  externalOverlayProject?: Project | null;
 };
 
 type ProjectDetailOverlayProps = {
@@ -291,7 +294,7 @@ export const ProjectDetailOverlay: React.FC<ProjectDetailOverlayProps> = ({
             </svg>
           </div>
 
-          {/* Close button */}
+          {/* Close button — fixed so it stays visible when overlay scrolls */}
           <button
             ref={closeButtonRef}
             type="button"
@@ -299,26 +302,55 @@ export const ProjectDetailOverlay: React.FC<ProjectDetailOverlayProps> = ({
             onClick={onClose}
             data-cursor="pointer"
             style={{
-              position: 'absolute',
+              position: 'fixed',
               top: 20,
               right: 24,
-              zIndex: 10,
-              background: 'transparent',
-              border: '1px solid var(--color-border-default)',
+              zIndex: 210,
+              background: 'var(--color-bg-secondary)',
+              border: '1px solid var(--color-border-strong)',
               borderRadius: '50%',
-              width: 40,
-              height: 40,
+              width: 44,
+              height: 44,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              color: 'var(--color-text-secondary)',
+              color: 'var(--color-text-primary)',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
             }}
           >
             <svg width={16} height={16} viewBox="0 0 16 16" stroke="currentColor" strokeWidth={1.5}>
               <line x1="2" y1="2" x2="14" y2="14" />
               <line x1="14" y1="2" x2="2" y2="14" />
             </svg>
+          </button>
+
+          {/* Back button — fixed bottom-left, always visible */}
+          <button
+            type="button"
+            onClick={onClose}
+            data-cursor="pointer"
+            style={{
+              position: 'fixed',
+              bottom: 32,
+              left: 32,
+              zIndex: 210,
+              background: 'var(--color-bg-secondary)',
+              border: '1px solid var(--color-border-strong)',
+              borderRadius: 8,
+              padding: '10px 20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              cursor: 'pointer',
+              color: 'var(--color-text-primary)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: 13,
+              boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+            }}
+          >
+            <span aria-hidden="true">←</span>
+            <span>Back</span>
           </button>
 
           {/* Content */}
@@ -524,13 +556,16 @@ export const ProjectDetailOverlay: React.FC<ProjectDetailOverlayProps> = ({
 // ProjectsSection
 // ---------------------------------------------------------------------------
 
-export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
+export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects, onOverlayOpen, externalOverlayProject }) => {
   const isReduced = useReducedMotion();
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const [overlayProject, setOverlayProject] = useState<Project | null>(null);
   const [hairSpike, setHairSpike] = useState(false);
   const [overlayLoading, setOverlayLoading] = useState(false);
   const [overlayError, setOverlayError] = useState(false);
+
+  // Use external overlay if provided
+  const effectiveOverlayProject = externalOverlayProject !== undefined ? externalOverlayProject : overlayProject;
 
   const projectCacheRef = useRef<Map<string, Project>>(new Map());
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -594,11 +629,15 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) =>
   const handleViewDetails = useCallback(
     async (project: ProjectSummary): Promise<void> => {
       const cached = projectCacheRef.current.get(project.slug);
-      if (cached) {
-        setOverlayError(false);
+    if (cached) {
+      setOverlayError(false);
+      if (onOverlayOpen) {
+        onOverlayOpen(cached);
+      } else {
         setOverlayProject(cached);
-        return;
       }
+      return;
+    }
 
       setOverlayLoading(true);
       setOverlayError(false);
@@ -617,7 +656,11 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) =>
           return;
         }
         projectCacheRef.current.set(project.slug, json.data);
-        setOverlayProject(json.data);
+        if (onOverlayOpen) {
+          onOverlayOpen(json.data);
+        } else {
+          setOverlayProject(json.data);
+        }
       } catch {
         setOverlayError(true);
       } finally {
@@ -628,6 +671,11 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) =>
   );
 
   const handleCloseOverlay = useCallback((): void => {
+    setOverlayProject(null);
+    setOverlayError(false);
+  }, []);
+
+  const handleExternalClose = useCallback((): void => {
     setOverlayProject(null);
     setOverlayError(false);
   }, []);
@@ -818,11 +866,13 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) =>
         )}
       </div>
 
-      {/* Detail overlay — rendered outside the section container to avoid clip */}
-      <ProjectDetailOverlay
-        project={overlayProject}
-        onClose={handleCloseOverlay}
-      />
+      {/* Detail overlay — only render here if no external handler */}
+      {onOverlayOpen === undefined && (
+        <ProjectDetailOverlay
+          project={overlayProject}
+          onClose={handleCloseOverlay}
+        />
+      )}
     </SectionTransition>
   );
 };
