@@ -118,10 +118,11 @@ export default async function ProjectDetailPage({ params }: PageProps): Promise<
       <div
         style={{
           position: 'relative',
-          zIndex: 1,
+          zIndex: 10,
           maxWidth: '1100px',
           margin: '0 auto',
           padding: 'clamp(80px, 8vw, 96px) clamp(16px, 4vw, 32px)',
+          backgroundColor: 'var(--color-bg-primary)',
         }}
       >
         {/* Back navigation */}
