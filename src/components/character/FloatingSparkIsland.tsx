@@ -24,26 +24,31 @@ const SECTION_POSITIONS: Record<string, Pos> = {
 
 const SECTION_IDS = ['hero', 'about', 'skills', 'projects', 'experience', 'contact'] as const;
 
+const MOBILE_POSITIONS: Record<string, Pos> = {
+  hero:       { scale: 0.68, rightPx: -120, topPct: 48, opacity: 1.00 },
+  about:      { scale: 0.28, rightPx: -8,  topPct: 88, opacity: 0.65 },
+  skills:     { scale: 0.26, rightPx: -8,  topPct: 88, opacity: 0.62 },
+  projects:   { scale: 0.24, rightPx: -8,  topPct: 88, opacity: 0.60 },
+  experience: { scale: 0.22, rightPx: -8,  topPct: 88, opacity: 0.58 },
+  contact:    { scale: 0.30, rightPx: 240, topPct: 68, opacity: 0.70 },
+};
+
 const FloatingSparkCore: React.FC = () => {
-  if (typeof window !== 'undefined' && window.location.pathname.startsWith('/admin')) {
-    return null;
-  }
   const [isAdmin, setIsAdmin] = useState(false);
+  const [pos, setPos] = useState<Pos>(SECTION_POSITIONS['hero']!);
+  const [currentSection, setCurrentSection] = useState<string>('hero');
+  const currentSectionRef = useRef<string>('hero');
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
     setIsAdmin(window.location.pathname.startsWith('/admin'));
   }, []);
 
-  const [pos, setPos] = useState<Pos>(SECTION_POSITIONS['hero']!);
-  const [currentSection, setCurrentSection] = useState<string>('hero');
-  const currentSectionRef = useRef<string>('hero');
-
-  const lastScrollTop = useRef(0);
-  const scrollingDown = useRef(true);
-
   useEffect(() => {
     const sectionOrder = ['hero', 'about', 'skills', 'projects', 'experience', 'contact'] as const;
 
-    const onScroll = () => {
+    const onScroll = (): void => {
       const index = Math.round(window.scrollY / window.innerHeight);
       const clampedIndex = Math.max(0, Math.min(index, sectionOrder.length - 1));
       const id = sectionOrder[clampedIndex];
@@ -57,17 +62,15 @@ const FloatingSparkCore: React.FC = () => {
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll(); // set initial state
+    onScroll();
 
     return () => {
       window.removeEventListener('scroll', onScroll);
     };
   }, []);
 
-  const [scrollProgress, setScrollProgress] = useState(0);
-
   useEffect(() => {
-    const onScroll = () => {
+    const onScroll = (): void => {
       const scrollTop = window.scrollY;
       const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
       setScrollProgress(scrollHeight > 0 ? scrollTop / scrollHeight : 0);
@@ -78,24 +81,12 @@ const FloatingSparkCore: React.FC = () => {
     };
   }, []);
 
-  const [isMobile, setIsMobile] = useState(false);
-
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
+    const check = (): void => setIsMobile(window.innerWidth < 768);
     check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
-
-  // Mobile positions — smaller, top-right corner, out of content way
-  const MOBILE_POSITIONS: Record<string, Pos> = {
-    hero:       { scale: 0.68, rightPx: -120, topPct: 48, opacity: 1.00 },
-    about:      { scale: 0.28, rightPx: -8,  topPct: 88, opacity: 0.65 },
-    skills:     { scale: 0.26, rightPx: -8,  topPct: 88, opacity: 0.62 },
-    projects:   { scale: 0.24, rightPx: -8,  topPct: 88, opacity: 0.60 },
-    experience: { scale: 0.22, rightPx: -8,  topPct: 88, opacity: 0.58 },
-    contact:    { scale: 0.30, rightPx: 240, topPct: 68, opacity: 0.70 },
-  };
 
   const activePos = isMobile
     ? (MOBILE_POSITIONS[currentSection] ?? MOBILE_POSITIONS['hero']!)
