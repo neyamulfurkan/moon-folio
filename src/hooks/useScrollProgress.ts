@@ -13,32 +13,36 @@ type UseScrollProgressReturn = {
 
 export const useScrollProgress = (): UseScrollProgressReturn => {
   const progress = useMotionValue(0);
+  const directionRef = useRef<ScrollDirection>('down');
   const [direction, setDirection] = useState<ScrollDirection>('down');
+  const isScrolledRef = useRef(false);
   const [isScrolled, setIsScrolled] = useState(false);
-
   const previousScrollY = useRef(0);
   const rafPending = useRef(false);
 
   useEffect(() => {
     const handleScroll = (): void => {
       if (rafPending.current) return;
-
       rafPending.current = true;
       requestAnimationFrame(() => {
         const currentScrollY = window.scrollY;
         const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-
         const rawProgress = scrollHeight > 0 ? currentScrollY / scrollHeight : 0;
         const clampedProgress = Math.min(1, Math.max(0, rawProgress));
         progress.set(clampedProgress);
 
-        if (currentScrollY > previousScrollY.current) {
-          setDirection('down');
-        } else if (currentScrollY < previousScrollY.current) {
-          setDirection('up');
+        const newDirection: ScrollDirection = currentScrollY > previousScrollY.current ? 'down' : 'up';
+        if (newDirection !== directionRef.current) {
+          directionRef.current = newDirection;
+          setDirection(newDirection);
         }
 
-        setIsScrolled(currentScrollY > 50);
+        const newIsScrolled = currentScrollY > 50;
+        if (newIsScrolled !== isScrolledRef.current) {
+          isScrolledRef.current = newIsScrolled;
+          setIsScrolled(newIsScrolled);
+        }
+
         previousScrollY.current = currentScrollY;
         rafPending.current = false;
       });
@@ -46,11 +50,11 @@ export const useScrollProgress = (): UseScrollProgressReturn => {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // Set initial values
     const initialScrollY = window.scrollY;
     const initialScrollHeight = document.documentElement.scrollHeight - window.innerHeight;
     const initialProgress = initialScrollHeight > 0 ? initialScrollY / initialScrollHeight : 0;
     progress.set(Math.min(1, Math.max(0, initialProgress)));
+    isScrolledRef.current = initialScrollY > 50;
     setIsScrolled(initialScrollY > 50);
     previousScrollY.current = initialScrollY;
 

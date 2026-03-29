@@ -1,11 +1,12 @@
 import { HeroSection } from '@/components/sections/HeroSection';
-// FloatingSparkIsland moved to layout.tsx
-import { AboutSection } from '@/components/sections/AboutSection';
-import { SkillsSection } from '@/components/sections/SkillsSection';
-import { ProjectsSectionWrapper } from '@/components/sections/ProjectsSectionWrapper';
-import { ExperienceSection } from '@/components/sections/ExperienceSection';
-import { ContactSection } from '@/components/sections/ContactSection';
-import { Footer } from '@/components/layout/Footer';
+import dynamic from 'next/dynamic';
+
+const AboutSection = dynamic(() => import('@/components/sections/AboutSection').then(m => ({ default: m.AboutSection })), { ssr: false });
+const SkillsSection = dynamic(() => import('@/components/sections/SkillsSection').then(m => ({ default: m.SkillsSection })), { ssr: false });
+const ProjectsSectionWrapper = dynamic(() => import('@/components/sections/ProjectsSectionWrapper').then(m => ({ default: m.ProjectsSectionWrapper })), { ssr: false });
+const ExperienceSection = dynamic(() => import('@/components/sections/ExperienceSection').then(m => ({ default: m.ExperienceSection })), { ssr: false });
+const ContactSection = dynamic(() => import('@/components/sections/ContactSection').then(m => ({ default: m.ContactSection })), { ssr: false });
+const Footer = dynamic(() => import('@/components/layout/Footer').then(m => ({ default: m.Footer })), { ssr: false });
 import { prisma } from '@/lib/prisma';
 import { HERO_SCENES_DEFAULT } from '@/lib/constants';
 import type { HeroScene, ProjectSummary, Skill, Experience } from '@/types/index';

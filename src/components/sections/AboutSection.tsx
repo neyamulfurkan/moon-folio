@@ -414,7 +414,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
             zIndex: 0,
           }}
         >
-          <SparkCharacter size="ghost" showChat={false} />
+          <SparkCharacter size="ghost" showChat={false} className="hidden md:block" />
         </div>
 
         <div

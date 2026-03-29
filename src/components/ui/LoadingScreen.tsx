@@ -100,22 +100,22 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
 
     const timers: ReturnType<typeof setTimeout>[] = [];
 
-    const t1 = setTimeout(() => setPhase('assemble'), 300);
+    const t1 = setTimeout(() => setPhase('assemble'), 200);
     timers.push(t1);
 
-    const t2 = setTimeout(() => setPhase('breathe'), 1000);
+    const t2 = setTimeout(() => setPhase('breathe'), 700);
     timers.push(t2);
 
-    const t3 = setTimeout(() => setPhase('charge'), 2200);
+    const t3 = setTimeout(() => setPhase('charge'), 1600);
     timers.push(t3);
 
-    const t4 = setTimeout(() => setPhase('flash'), 3400);
+    const t4 = setTimeout(() => setPhase('flash'), 2400);
     timers.push(t4);
 
     const t5 = setTimeout(() => {
       setPhase('complete');
       complete();
-    }, 3560);
+    }, 2560);
     timers.push(t5);
 
     return () => timers.forEach(clearTimeout);

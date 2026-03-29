@@ -22,7 +22,7 @@ const SECTION_POSITIONS: Record<string, Pos> = {
   contact:    { scale: 0.38, rightPx: -60, topPct: 72, opacity: 0.75 },
 };
 
-const SECTION_IDS = ['hero', 'about', 'skills', 'projects', 'experience', 'contact'] as const;
+// SECTION_IDS removed — section detection handled inline in scroll handler
 
 const MOBILE_POSITIONS: Record<string, Pos> = {
   hero:       { scale: 0.68, rightPx: -120, topPct: 48, opacity: 1.00 },
@@ -40,7 +40,7 @@ const FloatingSparkCore: React.FC = () => {
   const [currentSection, setCurrentSection] = useState<string>('hero');
   const currentSectionRef = useRef<string>('hero');
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(true);
 
   useEffect(() => {
     const path = window.location.pathname;
@@ -58,18 +58,32 @@ const FloatingSparkCore: React.FC = () => {
 
   useEffect(() => {
     const sectionOrder = ['hero', 'about', 'skills', 'projects', 'experience', 'contact'] as const;
+    let rafPending = false;
 
     const onScroll = (): void => {
-      const index = Math.round(window.scrollY / window.innerHeight);
-      const clampedIndex = Math.max(0, Math.min(index, sectionOrder.length - 1));
-      const id = sectionOrder[clampedIndex];
-      if (!id) return;
-      if (currentSectionRef.current !== id) {
-        currentSectionRef.current = id;
-        setCurrentSection(id);
-        const target = SECTION_POSITIONS[id];
-        if (target) setPos(target);
-      }
+      if (rafPending) return;
+      rafPending = true;
+      requestAnimationFrame(() => {
+        const scrollTop = window.scrollY;
+        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+
+        // Update scroll progress
+        const newProgress = scrollHeight > 0 ? scrollTop / scrollHeight : 0;
+        setScrollProgress(Math.min(1, Math.max(0, newProgress)));
+
+        // Update section position
+        const index = Math.round(scrollTop / window.innerHeight);
+        const clampedIndex = Math.max(0, Math.min(index, sectionOrder.length - 1));
+        const id = sectionOrder[clampedIndex];
+        if (id && currentSectionRef.current !== id) {
+          currentSectionRef.current = id;
+          setCurrentSection(id);
+          const target = SECTION_POSITIONS[id];
+          if (target) setPos(target);
+        }
+
+        rafPending = false;
+      });
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -81,21 +95,9 @@ const FloatingSparkCore: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const onScroll = (): void => {
-      const scrollTop = window.scrollY;
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollProgress(scrollHeight > 0 ? scrollTop / scrollHeight : 0);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-    };
-  }, []);
-
-  useEffect(() => {
     const check = (): void => setIsMobile(window.innerWidth < 768);
     check();
-    window.addEventListener('resize', check);
+    window.addEventListener('resize', check, { passive: true });
     return () => window.removeEventListener('resize', check);
   }, []);
 
@@ -114,10 +116,10 @@ const FloatingSparkCore: React.FC = () => {
         transform: `translateY(-50%) scale(${activePos.scale})`,
         transformOrigin: 'right center',
         opacity: activePos.opacity,
-        zIndex: 200,
+        zIndex: 50,
         pointerEvents: 'none',
         width: '480px',
-        transition: 'right 0.6s cubic-bezier(0.25,0.46,0.45,0.94), top 0.6s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.5s ease',
+        transition: 'right 0.4s cubic-bezier(0.25,0.46,0.45,0.94), top 0.4s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.3s ease',
       }}
       aria-hidden="true"
     >

@@ -13,18 +13,10 @@ export const useReducedMotion = (): boolean => {
       setPrefersReducedMotion(event.matches);
     };
 
-    try {
-      mediaQuery.addEventListener('change', handleChange);
-      return () => {
-        mediaQuery.removeEventListener('change', handleChange);
-      };
-    } catch {
-      // Fallback for browsers that don't support addEventListener on MediaQueryList
-      mediaQuery.addListener(handleChange);
-      return () => {
-        mediaQuery.removeListener(handleChange);
-      };
-    }
+    mediaQuery.addEventListener('change', handleChange);
+    return () => {
+      mediaQuery.removeEventListener('change', handleChange);
+    };
   }, []);
 
   return prefersReducedMotion;

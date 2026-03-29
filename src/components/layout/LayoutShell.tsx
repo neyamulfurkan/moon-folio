@@ -17,10 +17,11 @@ const SESSION_KEY = 'spark-loading-done';
 
 export const LayoutShell: React.FC<LayoutShellProps> = ({ children }) => {
   const [loadingDone, setLoadingDone] = useState<boolean>(() => {
-    // Synchronously check sessionStorage on first render
-    // so non-home pages never block pointer events
     if (typeof window === 'undefined') return false;
     try {
+      // Skip loading on non-home pages immediately
+      const isHomePage = window.location.pathname === '/';
+      if (!isHomePage) return true;
       return sessionStorage.getItem(SESSION_KEY) === '1';
     } catch {
       return false;
