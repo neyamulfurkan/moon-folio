@@ -272,27 +272,7 @@ export const ProjectDetailOverlay: React.FC<ProjectDetailOverlayProps> = ({
             overflowX: 'hidden',
           }}
         >
-          {/* Spark ghost backdrop */}
-          <div
-            aria-hidden="true"
-            style={{
-              position: 'absolute',
-              inset: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              opacity: 0.15,
-              pointerEvents: 'none',
-              zIndex: 0,
-            }}
-          >
-            <svg viewBox="0 0 480 520" width={480} height={520}>
-              {/* Simplified ghost silhouette of Spark */}
-              <ellipse cx="240" cy="172" rx="54" ry="64" fill="var(--color-text-secondary)" />
-              <rect x="180" y="220" width="120" height="110" rx="12" fill="var(--color-text-secondary)" />
-              <rect x="140" y="290" width="200" height="60" rx="4" fill="var(--color-text-secondary)" />
-            </svg>
-          </div>
+
 
           {/* Close button — fixed so it stays visible when overlay scrolls */}
           <button
