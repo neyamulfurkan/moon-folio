@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 import { useScrollProgress } from '@/hooks/useScrollProgress';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { cn } from '@/lib/utils';
@@ -30,11 +31,8 @@ export const Header: React.FC<HeaderProps> = ({ cvUrl, githubUrl }) => {
   const isReduced = useReducedMotion();
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isHomePage, setIsHomePage] = useState(true);
-
-  useEffect(() => {
-    setIsHomePage(window.location.pathname === '/');
-  }, []);
+  const pathname = usePathname();
+  const isHomePage = pathname === '/';
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const firstFocusableRef = useRef<HTMLAnchorElement>(null);
@@ -351,7 +349,7 @@ export const Header: React.FC<HeaderProps> = ({ cvUrl, githubUrl }) => {
 
         {/* Logo */}
         <a
-          href="#hero"
+          href={isHomePage ? '#hero' : '/'}
           onClick={handleLogoClick}
           className="text-[var(--color-text-primary)] hover:text-[var(--color-accent)] transition-colors duration-150 select-none"
           style={{
@@ -375,7 +373,7 @@ export const Header: React.FC<HeaderProps> = ({ cvUrl, githubUrl }) => {
             return (
               <a
                 key={link.sectionId}
-                href={link.href}
+                href={isHomePage ? link.href : `/${link.href}`}
                 onClick={(e) => handleNavClick(e, link.href)}
                 className={cn(
                   'relative flex flex-col items-center pb-1 text-sm transition-colors duration-150',
