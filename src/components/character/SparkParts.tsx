@@ -1,5 +1,7 @@
 'use client';
 
+import React from 'react';
+
 // ─── HairIdle ───────────────────────────────────────────────────────────────
 // Hood pulled up over head — fabric-draped, relaxed, completely covers hair
 

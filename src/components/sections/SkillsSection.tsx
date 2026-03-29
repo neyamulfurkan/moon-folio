@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SectionTransition } from '@/components/ui/SectionTransition';
 import { SkillCard } from '@/components/ui/SkillCard';
 import { SKILL_CATEGORIES } from '@/lib/constants';
