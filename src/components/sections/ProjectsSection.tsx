@@ -556,6 +556,128 @@ export const ProjectDetailOverlay: React.FC<ProjectDetailOverlayProps> = ({
 // ProjectsSection
 // ---------------------------------------------------------------------------
 
+// ── Projects mini-map bar ───────────────────────────────────────────────────
+
+type ProjectsMiniMapProps = {
+  projects: ProjectSummary[];
+  activeIndex: number;
+  onSelect: (i: number) => void;
+  isReduced: boolean;
+};
+
+const ProjectsMiniMap: React.FC<ProjectsMiniMapProps> = ({
+  projects,
+  activeIndex,
+  onSelect,
+  isReduced,
+}) => (
+  <div
+    role="tablist"
+    aria-label="Project navigation map"
+    style={{
+      position: 'absolute',
+      top: 20,
+      left: '50%',
+      transform: 'translateX(-50%)',
+      zIndex: 15,
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0',
+      background: 'rgba(13,17,23,0.82)',
+      backdropFilter: 'blur(10px)',
+      WebkitBackdropFilter: 'blur(10px)',
+      border: '1px solid var(--color-border-default)',
+      borderRadius: '8px',
+      padding: '6px 10px',
+      maxWidth: 'calc(100vw - 160px)',
+      overflowX: 'auto',
+      scrollbarWidth: 'none',
+      msOverflowStyle: 'none',
+    }}
+  >
+    {projects.map((project, i) => {
+      const isActive = i === activeIndex;
+      return (
+        <button
+          key={project.id}
+          type="button"
+          role="tab"
+          aria-selected={isActive}
+          aria-label={`Go to project: ${project.title}`}
+          onClick={() => onSelect(i)}
+          data-cursor="pointer"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '4px 10px',
+            borderRadius: '5px',
+            border: 'none',
+            background: isActive
+              ? 'rgba(0,212,255,0.14)'
+              : 'transparent',
+            cursor: 'pointer',
+            whiteSpace: 'nowrap',
+            flexShrink: 0,
+            transition: isReduced ? 'none' : 'background 180ms',
+          }}
+        >
+          <span
+            aria-hidden="true"
+            style={{
+              display: 'block',
+              width: isActive ? 7 : 5,
+              height: isActive ? 7 : 5,
+              borderRadius: '50%',
+              background: isActive
+                ? 'var(--color-accent)'
+                : 'var(--color-border-strong)',
+              boxShadow: isActive ? '0 0 6px var(--color-accent)' : 'none',
+              flexShrink: 0,
+              transition: isReduced ? 'none' : 'all 200ms',
+            }}
+          />
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '10px',
+              letterSpacing: '0.04em',
+              color: isActive
+                ? 'var(--color-accent)'
+                : 'var(--color-text-tertiary)',
+              fontWeight: isActive ? 500 : 400,
+              transition: isReduced ? 'none' : 'color 180ms',
+              maxWidth: '110px',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {project.title}
+          </span>
+        </button>
+      );
+    })}
+    {/* count badge */}
+    <div
+      aria-hidden="true"
+      style={{
+        marginLeft: '8px',
+        paddingLeft: '8px',
+        borderLeft: '1px solid var(--color-border-subtle)',
+        fontFamily: 'var(--font-mono)',
+        fontSize: '10px',
+        color: 'var(--color-text-tertiary)',
+        whiteSpace: 'nowrap',
+        flexShrink: 0,
+      }}
+    >
+      {activeIndex + 1}/{projects.length}
+    </div>
+  </div>
+);
+
+// ── ProjectsSection ─────────────────────────────────────────────────────────
+
 export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects, onOverlayOpen, externalOverlayProject }) => {
   const isReduced = useReducedMotion();
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
@@ -571,6 +693,9 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects, onOv
   const sectionRef = useRef<HTMLDivElement>(null);
   const isVisibleRef = useRef(false);
   const hairSpikeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // keep onOverlayOpen in a ref so handleViewDetails never goes stale
+  const onOverlayOpenRef = useRef(onOverlayOpen);
+  useEffect(() => { onOverlayOpenRef.current = onOverlayOpen; }, [onOverlayOpen]);
 
   const triggerHairSpike = useCallback((): void => {
     if (isReduced) return;
@@ -629,15 +754,15 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects, onOv
   const handleViewDetails = useCallback(
     async (project: ProjectSummary): Promise<void> => {
       const cached = projectCacheRef.current.get(project.slug);
-    if (cached) {
-      setOverlayError(false);
-      if (onOverlayOpen) {
-        onOverlayOpen(cached);
-      } else {
-        setOverlayProject(cached);
+      if (cached) {
+        setOverlayError(false);
+        if (onOverlayOpenRef.current) {
+          onOverlayOpenRef.current(cached);
+        } else {
+          setOverlayProject(cached);
+        }
+        return;
       }
-      return;
-    }
 
       setOverlayLoading(true);
       setOverlayError(false);
@@ -656,8 +781,8 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects, onOv
           return;
         }
         projectCacheRef.current.set(project.slug, json.data);
-        if (onOverlayOpen) {
-          onOverlayOpen(json.data);
+        if (onOverlayOpenRef.current) {
+          onOverlayOpenRef.current(json.data);
         } else {
           setOverlayProject(json.data);
         }
@@ -737,6 +862,21 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects, onOv
         {/* Spark hair watermark */}
         <SparkHairWatermark spike={hairSpike} isReduced={isReduced} />
 
+        {/* ── Projects mini-map ── */}
+        {hasMultiple && (
+          <ProjectsMiniMap
+            projects={projects}
+            activeIndex={activeProjectIndex}
+            onSelect={(i) => {
+              if (i !== activeProjectIndex) {
+                triggerHairSpike();
+                setActiveProjectIndex(i);
+              }
+            }}
+            isReduced={isReduced}
+          />
+        )}
+
         {/* Project cards */}
         {projects.map((project, i) => (
           <div
@@ -791,11 +931,10 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects, onOv
           </>
         )}
 
-        {/* Indicator dots */}
+        {/* Indicator dots — bottom, smaller role since mini-map is primary */}
         {hasMultiple && (
           <div
-            role="tablist"
-            aria-label="Project navigation"
+            aria-hidden="true"
             style={{
               position: 'absolute',
               bottom: 32,
@@ -803,36 +942,22 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects, onOv
               transform: 'translateX(-50%)',
               zIndex: 10,
               display: 'flex',
-              gap: 10,
+              gap: 8,
               alignItems: 'center',
             }}
           >
             {projects.map((project, i) => (
-              <button
+              <span
                 key={project.id}
-                type="button"
-                role="tab"
-                aria-selected={activeProjectIndex === i}
-                aria-label={`Go to project: ${project.title}`}
-                onClick={() => {
-                  if (i !== activeProjectIndex) {
-                    triggerHairSpike();
-                    setActiveProjectIndex(i);
-                  }
-                }}
-                data-cursor="pointer"
                 style={{
                   display: 'block',
                   borderRadius: '50%',
-                  border: 'none',
-                  padding: 0,
-                  cursor: 'pointer',
                   background:
                     activeProjectIndex === i
                       ? 'var(--color-accent)'
                       : 'var(--color-border-default)',
-                  width: activeProjectIndex === i ? 8 : 5,
-                  height: activeProjectIndex === i ? 8 : 5,
+                  width: activeProjectIndex === i ? 6 : 4,
+                  height: activeProjectIndex === i ? 6 : 4,
                   transition: isReduced
                     ? 'none'
                     : 'width 200ms, height 200ms, background 200ms',
