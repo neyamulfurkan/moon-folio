@@ -996,106 +996,106 @@ export const DeskSetup: React.FC<{ scrollProgress?: number }> = ({ scrollProgres
     {/* Laptop lid and hinge rendered here — BEFORE arms so body covers the lid naturally */}
     {/* Laptop hinge — the pivot point at back of keyboard base */}
     <path
-      d="M142 322 C165 319 200 318 230 319 C248 319 262 321 271 323"
+      d="M120 328 C160 320 240 318 280 322 C300 324 320 326 330 330"
       fill="none"
       stroke="#0d0d0d"
-      strokeWidth="3.5"
+      strokeWidth="4"
       strokeLinecap="round"
     />
     {/* Lid outer shell — shallow realistic angle */}
     <path
-      d="M133 322 C135 312 138 300 142 290 C146 280 152 274 164 271 C178 268 210 268 236 269 C254 270 264 274 268 282 C272 290 272 306 270 322"
+      d="M105 328 C110 310 115 280 125 260 C135 235 155 220 185 215 C225 210 280 210 320 218 C345 223 360 240 368 270 C375 300 373 318 365 328"
       fill="#1c1c1e"
       stroke="#111"
-      strokeWidth="1.5"
+      strokeWidth="1.8"
       strokeLinejoin="round"
     />
     {/* Dell logo */}
-    <ellipse cx="202" cy="291" rx="8" ry="7" fill="#141414" stroke="#282828" strokeWidth="0.8" />
-    <text x="202" y="294" textAnchor="middle" fontFamily="sans-serif" fontSize="5" fontWeight="700" fill="rgba(255,255,255,0.08)">DELL</text>
+    <ellipse cx="215" cy="235" rx="10" ry="9" fill="#141414" stroke="#282828" strokeWidth="1" />
+    <text x="215" y="240" textAnchor="middle" fontFamily="sans-serif" fontSize="6" fontWeight="700" fill="rgba(255,255,255,0.10)">DELL</text>
 
     {/* Screen bezel */}
     <path
-      d="M135 321 C137 312 140 301 144 291 C148 281 153 276 165 273 C179 270 210 270 235 271 C252 272 262 276 265 283 C269 291 269 306 267 321"
+      d="M110 328 C115 305 120 270 130 250 C142 225 162 210 190 205 C240 198 290 198 330 210 C355 218 368 240 375 275 C378 310 375 325 368 328"
       fill="#111111"
       stroke="#1a1a1a"
-      strokeWidth="1"
+      strokeWidth="1.2"
       strokeLinejoin="round"
     />
 
-    {/* Screen clip — top at y=274, bottom at y=319 */}
+    {/* Screen clip — top at y=210, bottom at y=328 */}
     <clipPath id="screen-clip">
-      <polygon points="139,319 264,319 260,275 143,275" />
+      <polygon points="112,328 368,328 362,210 118,210" />
     </clipPath>
 
     {/* Screen background */}
-    <polygon points="139,319 264,319 260,275 143,275" fill="#07090f" />
+    <polygon points="112,328 368,328 362,210 118,210" fill="#07090f" />
 
     {/* Portfolio UI */}
     <g clipPath="url(#screen-clip)">
-      <rect x="139" y="275" width="121" height="44" fill="#07090f" />
+      <rect x="112" y="210" width="256" height="118" fill="#07090f" />
 
       {/* Nav bar */}
-      <rect x="139" y="275" width="121" height="9" fill="#0d1117" />
-      <text x="143" y="282" fontFamily="sans-serif" fontSize="4" fontWeight="600" fill="#f0f4ff" opacity="0.9">Moon</text>
-      <text x="164" y="282" fontFamily="sans-serif" fontSize="3.5" fill={section === 'hero' ? '#00d4ff' : '#6a7a9a'}>About</text>
-      <text x="178" y="282" fontFamily="sans-serif" fontSize="3.5" fill={section === 'skills' ? '#00d4ff' : '#6a7a9a'}>Skills</text>
-      <text x="192" y="282" fontFamily="sans-serif" fontSize="3.5" fill={section === 'projects' ? '#00d4ff' : '#6a7a9a'}>Proj</text>
-      <text x="206" y="282" fontFamily="sans-serif" fontSize="3.5" fill={section === 'contact' ? '#00d4ff' : '#6a7a9a'}>Contact</text>
-      <line x1="139" y1="284" x2="260" y2="284" stroke="rgba(255,255,255,0.06)" strokeWidth="0.5" />
+      <rect x="112" y="210" width="256" height="18" fill="#0d1117" />
+      <text x="120" y="223" fontFamily="sans-serif" fontSize="6" fontWeight="600" fill="#f0f4ff" opacity="0.9">Moon</text>
+      <text x="180" y="223" fontFamily="sans-serif" fontSize="5.5" fill={section === 'hero' ? '#00d4ff' : '#6a7a9a'}>About</text>
+      <text x="240" y="223" fontFamily="sans-serif" fontSize="5.5" fill={section === 'skills' ? '#00d4ff' : '#6a7a9a'}>Skills</text>
+      <text x="290" y="223" fontFamily="sans-serif" fontSize="5.5" fill={section === 'projects' ? '#00d4ff' : '#6a7a9a'}>Projects</text>
+      <text x="350" y="223" fontFamily="sans-serif" fontSize="5.5" fill={section === 'contact' ? '#00d4ff' : '#6a7a9a'}>Contact</text>
+      <line x1="112" y1="230" x2="368" y2="230" stroke="rgba(255,255,255,0.06)" strokeWidth="0.8" />
 
       {/* Scrollable content */}
       <clipPath id="screen-content-clip">
-        <rect x="139" y="284" width="121" height="35" />
+        <rect x="112" y="230" width="256" height="98" />
       </clipPath>
       <g clipPath="url(#screen-content-clip)">
-        <g transform={`translate(0, ${-scrollProgress * 210})`}>
+        <g transform={`translate(0, ${-scrollProgress * 490})`}>
 
-          {/* HERO — y=284 */}
-          <rect x="139" y="284" width="121" height="35" fill="#07090f" />
-          <text x="143" y="291" fontFamily="monospace" fontSize="3" fill="#00d4ff" opacity="0.85">EEE STUDENT &amp; FULL-STACK DEV</text>
-          <text x="143" y="298" fontFamily="sans-serif" fontSize="5" fontWeight="700" fill="#f0f4ff">I build things</text>
-          <text x="143" y="304" fontFamily="sans-serif" fontSize="5" fontWeight="700" fill="#f0f4ff">that run on electricity.</text>
-          <rect x="143" y="307" width="22" height="5" rx="1.5" fill="#00d4ff" />
-          <text x="154" y="311" textAnchor="middle" fontFamily="sans-serif" fontSize="3" fontWeight="700" fill="#07090f">View Work</text>
-          <rect x="169" y="307" width="22" height="5" rx="1.5" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="0.7" />
-          <text x="180" y="311" textAnchor="middle" fontFamily="sans-serif" fontSize="3" fill="#f0f4ff" opacity="0.7">Contact</text>
+          {/* HERO — y=230 */}
+          <rect x="112" y="230" width="256" height="98" fill="#07090f" />
+          <text x="125" y="250" fontFamily="monospace" fontSize="5.5" fill="#00d4ff" opacity="0.85">EEE STUDENT &amp; FULL-STACK DEV</text>
+          <text x="125" y="270" fontFamily="sans-serif" fontSize="10" fontWeight="700" fill="#f0f4ff">I build things</text>
+          <text x="125" y="290" fontFamily="sans-serif" fontSize="10" fontWeight="700" fill="#f0f4ff">that run on electricity.</text>
+          <rect x="125" y="305" width="45" height="12" rx="3" fill="#00d4ff" />
+          <text x="147" y="317" textAnchor="middle" fontFamily="sans-serif" fontSize="6" fontWeight="700" fill="#07090f">View Work</text>
+          <rect x="180" y="305" width="45" height="12" rx="3" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="1.2" />
+          <text x="202" y="317" textAnchor="middle" fontFamily="sans-serif" fontSize="6" fill="#f0f4ff" opacity="0.7">Contact</text>
 
-          {/* ABOUT — y=319 */}
-          <rect x="139" y="319" width="121" height="35" fill="#0d1117" />
-          <text x="143" y="327" fontFamily="monospace" fontSize="5" fontWeight="700" fill="#f0f4ff">sys.whoami()</text>
-          <rect x="143" y="330" width="55" height="2" rx="1" fill="#6a7a9a" opacity="0.4" />
-          <rect x="143" y="334" width="40" height="2" rx="1" fill="#6a7a9a" opacity="0.3" />
-          <rect x="143" y="338" width="18" height="10" rx="1.5" fill="#141b24" stroke="rgba(0,212,255,0.25)" strokeWidth="0.5" />
-          <text x="152" y="345" textAnchor="middle" fontFamily="sans-serif" fontSize="5" fontWeight="700" fill="#00d4ff">8+</text>
-          <rect x="164" y="338" width="18" height="10" rx="1.5" fill="#141b24" stroke="rgba(0,212,255,0.25)" strokeWidth="0.5" />
-          <text x="173" y="345" textAnchor="middle" fontFamily="sans-serif" fontSize="5" fontWeight="700" fill="#00d4ff">3+</text>
-          <rect x="185" y="338" width="18" height="10" rx="1.5" fill="#141b24" stroke="rgba(0,212,255,0.25)" strokeWidth="0.5" />
-          <text x="194" y="345" textAnchor="middle" fontFamily="sans-serif" fontSize="5" fontWeight="700" fill="#00d4ff">∞</text>
+          {/* ABOUT — y=328 */}
+          <rect x="112" y="328" width="256" height="98" fill="#0d1117" />
+          <text x="125" y="355" fontFamily="monospace" fontSize="11" fontWeight="700" fill="#f0f4ff">sys.whoami()</text>
+          <rect x="125" y="365" width="120" height="4" rx="2" fill="#6a7a9a" opacity="0.4" />
+          <rect x="125" y="375" width="85" height="4" rx="2" fill="#6a7a9a" opacity="0.3" />
+          <rect x="125" y="390" width="38" height="20" rx="3" fill="#141b24" stroke="rgba(0,212,255,0.25)" strokeWidth="1" />
+          <text x="144" y="407" textAnchor="middle" fontFamily="sans-serif" fontSize="11" fontWeight="700" fill="#00d4ff">8+</text>
+          <rect x="170" y="390" width="38" height="20" rx="3" fill="#141b24" stroke="rgba(0,212,255,0.25)" strokeWidth="1" />
+          <text x="189" y="407" textAnchor="middle" fontFamily="sans-serif" fontSize="11" fontWeight="700" fill="#00d4ff">3+</text>
+          <rect x="215" y="390" width="38" height="20" rx="3" fill="#141b24" stroke="rgba(0,212,255,0.25)" strokeWidth="1" />
+          <text x="234" y="407" textAnchor="middle" fontFamily="sans-serif" fontSize="11" fontWeight="700" fill="#00d4ff">∞</text>
 
-          {/* SKILLS — y=354 */}
-          <rect x="139" y="354" width="121" height="35" fill="#07090f" />
-          <text x="143" y="362" fontFamily="monospace" fontSize="5" fontWeight="700" fill="#f0f4ff">skills.json</text>
-          <rect x="143" y="365" width="22" height="5" rx="1.5" fill="#141b24" stroke="rgba(0,212,255,0.4)" strokeWidth="0.5" />
-          <text x="154" y="369" textAnchor="middle" fontFamily="monospace" fontSize="3" fill="#00d4ff">Next.js</text>
-          <rect x="168" y="365" width="26" height="5" rx="1.5" fill="#141b24" stroke="rgba(0,212,255,0.4)" strokeWidth="0.5" />
-          <text x="181" y="369" textAnchor="middle" fontFamily="monospace" fontSize="3" fill="#00d4ff">TypeScript</text>
-          <rect x="143" y="373" width="95" height="3" rx="1" fill="#141b24" />
-          <rect x="143" y="373" width="72" height="3" rx="1" fill="rgba(0,212,255,0.55)" />
+          {/* SKILLS — y=426 */}
+          <rect x="112" y="426" width="256" height="98" fill="#07090f" />
+          <text x="125" y="455" fontFamily="monospace" fontSize="11" fontWeight="700" fill="#f0f4ff">skills.json</text>
+          <rect x="125" y="470" width="45" height="12" rx="3" fill="#141b24" stroke="rgba(0,212,255,0.4)" strokeWidth="1" />
+          <text x="147" y="482" textAnchor="middle" fontFamily="monospace" fontSize="6" fill="#00d4ff">Next.js</text>
+          <rect x="180" y="470" width="55" height="12" rx="3" fill="#141b24" stroke="rgba(0,212,255,0.4)" strokeWidth="1" />
+          <text x="207" y="482" textAnchor="middle" fontFamily="monospace" fontSize="6" fill="#00d4ff">TypeScript</text>
+          <rect x="125" y="495" width="200" height="8" rx="2" fill="#141b24" />
+          <rect x="125" y="495" width="150" height="8" rx="2" fill="rgba(0,212,255,0.55)" />
 
-          {/* CONTACT — y=389 */}
-          <rect x="139" y="389" width="121" height="35" fill="#07090f" />
-          <text x="143" y="397" fontFamily="monospace" fontSize="5" fontWeight="700" fill="#f0f4ff">connect()</text>
-          <rect x="143" y="400" width="100" height="6" rx="1.5" fill="#141b24" stroke="rgba(255,255,255,0.08)" strokeWidth="0.5" />
-          <text x="147" y="405" fontFamily="sans-serif" fontSize="3" fill="#3d4a5e">Name</text>
-          <rect x="143" y="408" width="100" height="6" rx="1.5" fill="#141b24" stroke="rgba(255,255,255,0.08)" strokeWidth="0.5" />
-          <text x="147" y="413" fontFamily="sans-serif" fontSize="3" fill="#3d4a5e">Email</text>
-          <rect x="143" y="416" width="32" height="5" rx="1.5" fill="#00d4ff" />
-          <text x="159" y="420" textAnchor="middle" fontFamily="sans-serif" fontSize="3" fontWeight="700" fill="#07090f">Send Signal</text>
+          {/* CONTACT — y=524 */}
+          <rect x="112" y="524" width="256" height="98" fill="#07090f" />
+          <text x="125" y="555" fontFamily="monospace" fontSize="11" fontWeight="700" fill="#f0f4ff">connect()</text>
+          <rect x="125" y="570" width="210" height="14" rx="3" fill="#141b24" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+          <text x="135" y="582" fontFamily="sans-serif" fontSize="6" fill="#3d4a5e">Name</text>
+          <rect x="125" y="590" width="210" height="14" rx="3" fill="#141b24" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+          <text x="135" y="602" fontFamily="sans-serif" fontSize="6" fill="#3d4a5e">Email</text>
+          <rect x="125" y="610" width="65" height="12" rx="3" fill="#00d4ff" />
+          <text x="157" y="622" textAnchor="middle" fontFamily="sans-serif" fontSize="6" fontWeight="700" fill="#07090f">Send Signal</text>
         </g>
       </g>
 
-      <rect x="139" y="275" width="121" height="44" fill="url(#screen-glow)" opacity="0.03" />
+      <rect x="112" y="210" width="256" height="118" fill="url(#screen-glow)" opacity="0.03" />
     </g>
 
     <defs>

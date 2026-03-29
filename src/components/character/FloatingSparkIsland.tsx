@@ -19,7 +19,7 @@ const SECTION_POSITIONS: Record<string, Pos> = {
   skills:     { scale: 0.48, rightPx: 6,   topPct: 60, opacity: 0.72 },
   projects:   { scale: 0.44, rightPx: 6,   topPct: 62, opacity: 0.68 },
   experience: { scale: 0.40, rightPx: 6,   topPct: 78, opacity: 0.62 },
-  contact:    { scale: 0.36, rightPx: 8,   topPct: 65, opacity: 0.58 },
+  contact:    { scale: 0.48, rightPx: 12,  topPct: 40, opacity: 0.80 },
 };
 
 const SECTION_IDS = ['hero', 'about', 'skills', 'projects', 'experience', 'contact'] as const;
@@ -81,12 +81,12 @@ const FloatingSparkCore: React.FC = () => {
 
   // Mobile positions — smaller, top-right corner, out of content way
   const MOBILE_POSITIONS: Record<string, Pos> = {
-    hero:       { scale: 0.42, rightPx: -28, topPct: 15, opacity: 0.80 },
-    about:      { scale: 0.30, rightPx: -32, topPct: 78, opacity: 0.65 },
-    skills:     { scale: 0.28, rightPx: -34, topPct: 18, opacity: 0.60 },
-    projects:   { scale: 0.26, rightPx: -34, topPct: 18, opacity: 0.58 },
-    experience: { scale: 0.24, rightPx: -34, topPct: 80, opacity: 0.55 },
-   contact:    { scale: 0.28, rightPx: 260, topPct: 72, opacity: 0.60 },
+    hero:       { scale: 0.65, rightPx: 8, topPct: 48, opacity: 1.00 },
+    about:      { scale: 0.48, rightPx: 4, topPct: 50, opacity: 0.80 },
+    skills:     { scale: 0.45, rightPx: 4, topPct: 50, opacity: 0.78 },
+    projects:   { scale: 0.42, rightPx: 4, topPct: 50, opacity: 0.75 },
+    experience: { scale: 0.40, rightPx: 4, topPct: 50, opacity: 0.72 },
+    contact:    { scale: 0.50, rightPx: 8, topPct: 42, opacity: 0.82 },
   };
 
   const activePos = isMobile

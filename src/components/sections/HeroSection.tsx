@@ -343,14 +343,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ scenes, cvUrl }) => {
         <div
           style={{
             flexShrink: 0,
-            height: '260px',
+            height: '300px',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             marginBottom: '24px',
           }}
         >
-          <div style={{ width: '240px', height: '260px', position: 'relative' }}>
+          <div style={{ width: '320px', height: '300px', position: 'relative' }}>
             <SparkCharacter onChatOpen={openChat} size="hero" showChat={true} onShockReady={(fn) => { sparkShockRef.current = fn; }} />
           </div>
         </div>
