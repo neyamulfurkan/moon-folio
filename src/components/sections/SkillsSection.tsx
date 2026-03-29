@@ -255,18 +255,19 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
                         ? { x: 70, rotate: 5, scale: 0.92 }
                         : { x: 100, rotate: 7, scale: 0.88 };
 
-                return (
-                  <div
-                    key={cat}
-                    onClick={() =>
-                      stackPosition === 1
-                        ? navigate('right')
-                        : undefined
-                    }
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      transform: isReduced
+return (
+              <div
+                key={cat}
+                onClick={() =>
+                  stackPosition === 1
+                    ? navigate('right')
+                    : undefined
+                }
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  zIndex: stackPosition === 0 ? 4 : stackPosition === 1 ? 3 : stackPosition === 2 ? 2 : 1,
+                  transform: isReduced
                         ? 'none'
                         : `translateX(${transform.x}px) rotate(${transform.rotate}deg) scale(${transform.scale})`,
                       transformOrigin: 'bottom center',
@@ -304,6 +305,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
                     inset: 0,
                     cursor: stackPosition === 1 ? 'pointer' : 'default',
                     pointerEvents: stackPosition === 3 ? 'none' : 'auto',
+                    zIndex: stackPosition === 0 ? 4 : stackPosition === 1 ? 3 : stackPosition === 2 ? 2 : 1,
                   }}
                   aria-hidden={!isCurrentlyActive}
                   role={stackPosition === 1 ? 'button' : undefined}

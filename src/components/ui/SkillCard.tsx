@@ -259,6 +259,8 @@ export const SkillCard: React.FC<SkillCardProps> = ({
       style={{
         pointerEvents: stackPosition === 3 ? 'none' : 'auto',
         position: 'absolute',
+        top: 0,
+        left: 0,
         transformOrigin: 'bottom center',
       }}
       className={cn(

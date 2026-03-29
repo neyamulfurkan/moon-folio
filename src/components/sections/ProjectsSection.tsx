@@ -185,13 +185,23 @@ export const ProjectDetailOverlay: React.FC<ProjectDetailOverlayProps> = ({
     void sanitize();
   }, [project?.fullDesc]);
 
-  // Body scroll lock
+  // Body scroll lock — do NOT set body overflow hidden as it breaks fixed overlay scroll
   useEffect(() => {
     if (project) {
-      document.body.style.overflow = 'hidden';
+      // Store current scroll position and lock body without hiding overflow on the overlay container
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
     }
     return () => {
-      document.body.style.overflow = '';
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+      }
     };
   }, [project]);
 
