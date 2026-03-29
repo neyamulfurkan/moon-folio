@@ -152,7 +152,7 @@ export const ContactSection: React.FC = () => {
             position: 'absolute',
             bottom: '24px',
             left: '24px',
-            opacity: 0.18,
+            opacity: 1,
             pointerEvents: 'none',
             zIndex: 2,
           }}
