@@ -21,23 +21,7 @@ export default async function AdminLayout({
   // Middleware already blocks unauthenticated access to non-login admin routes
   // We only run the full sidebar layout when session exists
   if (!session) {
-    // Render children directly (login page) without the admin shell
-    return (
-      <html lang="en">
-        <body
-          style={{
-            margin: 0,
-            padding: 0,
-            backgroundColor: 'var(--color-bg-primary)',
-            color: 'var(--color-text-primary)',
-            fontFamily: 'var(--font-display)',
-            WebkitFontSmoothing: 'antialiased',
-          }}
-        >
-          {children}
-        </body>
-      </html>
-    );
+    return <>{children}</>;
   }
 
   const unreadCount = await prisma.contactMessage.count({
@@ -47,23 +31,12 @@ export default async function AdminLayout({
   const badgeLabel = unreadCount > 99 ? "99+" : unreadCount > 0 ? String(unreadCount) : null;
 
   return (
-    <html lang="en">
-      <body
-        style={{
-          margin: 0,
-          padding: 0,
-          backgroundColor: "var(--color-bg-primary)",
-          color: "var(--color-text-primary)",
-          fontFamily: "var(--font-display)",
-          WebkitFontSmoothing: "antialiased",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            minHeight: "100vh",
-          }}
-        >
+    <div
+      style={{
+        display: "flex",
+        minHeight: "100vh",
+      }}
+    >
           {/* Sidebar */}
           <aside
             style={{
@@ -283,8 +256,6 @@ export default async function AdminLayout({
               {children}
             </main>
           </div>
-        </div>
-      </body>
-    </html>
+    </div>
   );
 }
