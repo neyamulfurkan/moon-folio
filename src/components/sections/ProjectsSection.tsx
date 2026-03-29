@@ -45,13 +45,14 @@ const SparkHairWatermark: React.FC<SparkHairWatermarkProps> = ({ spike, isReduce
       justifyContent: 'center',
       pointerEvents: 'none',
       zIndex: 1,
+      overflow: 'hidden',
     }}
   >
     <motion.svg
       viewBox="0 0 160 140"
-      width={320}
-      height={280}
-      style={{ opacity: 0.2 }}
+      width={200}
+      height={175}
+      style={{ opacity: 0.12 }}
       animate={
         isReduced
           ? { rotate: 0 }
@@ -840,8 +841,8 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects, onOv
         style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden', paddingTop: '64px' }}
       data-section="projects"
       >
-        {/* Spark hair watermark */}
-        <SparkHairWatermark spike={hairSpike} isReduced={isReduced} />
+        {/* Spark hair watermark — hidden when overlay is open */}
+        {!overlayProject && <SparkHairWatermark spike={hairSpike} isReduced={isReduced} />}
 
         {/* ── Projects mini-map ── */}
         {hasMultiple && (
