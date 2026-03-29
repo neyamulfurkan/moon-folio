@@ -51,6 +51,23 @@ export const Header: React.FC<HeaderProps> = ({ cvUrl, githubUrl }) => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
 
+    // On mount, if URL has a hash (e.g. navigated from project detail page), scroll to that section
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const hashSection = window.location.hash.replace('#', '');
+      if (sectionOrder.includes(hashSection)) {
+        // Use rAF to wait for page to fully render before scrolling
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const index = sectionOrder.indexOf(hashSection);
+            const scrollTop = index * window.innerHeight;
+            window.scrollTo({ top: scrollTop, behavior: 'auto' });
+            // Clean up the hash from the URL without triggering navigation
+            window.history.replaceState(null, '', window.location.pathname);
+          });
+        });
+      }
+    }
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -128,9 +145,9 @@ export const Header: React.FC<HeaderProps> = ({ cvUrl, githubUrl }) => {
     (e: React.MouseEvent<HTMLAnchorElement>, href: string): void => {
       e.preventDefault();
       const sectionId = href.replace('#', '');
-      // If not on the home page, navigate to home with the hash
       if (typeof window !== 'undefined' && window.location.pathname !== '/') {
-        window.location.href = `/${href}`;
+        // Navigate to home page with hash so the mount effect can scroll to section
+        window.location.assign(`/${href}`);
         return;
       }
       scrollToSection(sectionId);
@@ -142,9 +159,8 @@ export const Header: React.FC<HeaderProps> = ({ cvUrl, githubUrl }) => {
   const handleLogoClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>): void => {
       e.preventDefault();
-      // If not on the home page, navigate home
       if (typeof window !== 'undefined' && window.location.pathname !== '/') {
-        window.location.href = '/';
+        window.location.assign('/');
         return;
       }
       scrollToSection('hero');
