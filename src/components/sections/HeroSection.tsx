@@ -343,11 +343,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ scenes, cvUrl }) => {
         <div
           style={{
             flexShrink: 0,
-            height: '300px',
+            height: '240px',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            marginBottom: '24px',
+            marginBottom: '16px',
           }}
         >
           <div style={{ width: '320px', height: '300px', position: 'relative' }}>
@@ -356,7 +356,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ scenes, cvUrl }) => {
         </div>
 
         {/* Eyebrow */}
-        <div style={{ height: '20px', marginBottom: '16px', flexShrink: 0 }}>
+        <div style={{ minHeight: '20px', marginBottom: '8px', flexShrink: 0 }}>
           <motion.p
             animate={{ opacity: eyebrowVisible ? 1 : 0 }}
             transition={{ duration: 0.3 }}
@@ -374,12 +374,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ scenes, cvUrl }) => {
         </div>
 
         {/* Headline — fixed height */}
-        <div style={{ height: '120px', marginBottom: '16px', overflow: 'hidden', flexShrink: 0 }}>
+        <div style={{ height: '160px', marginBottom: '12px', overflow: 'hidden', flexShrink: 0 }}>
           <h1
             style={{
-              fontSize: 'clamp(32px, 8vw, 48px)',
+              fontSize: 'clamp(28px, 7vw, 44px)',
               fontWeight: 600,
-              lineHeight: 1.1,
+              lineHeight: 1.15,
               color: 'var(--color-text-primary)',
               margin: 0,
             }}
@@ -404,7 +404,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ scenes, cvUrl }) => {
         </div>
 
         {/* Supporting — fixed height */}
-        <div style={{ height: '80px', marginBottom: '24px', overflow: 'hidden', flexShrink: 0 }}>
+        <div style={{ height: '76px', marginBottom: '20px', overflow: 'hidden', flexShrink: 0 }}>
           <motion.p
             animate={{ opacity: supportingVisible ? 1 : 0 }}
             transition={{ duration: 0.4 }}
