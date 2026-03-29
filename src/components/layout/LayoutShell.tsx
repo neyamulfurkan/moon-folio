@@ -13,8 +13,19 @@ type LayoutShellProps = {
   children: ReactNode;
 };
 
+const SESSION_KEY = 'spark-loading-done';
+
 export const LayoutShell: React.FC<LayoutShellProps> = ({ children }) => {
-  const [loadingDone, setLoadingDone] = useState(false);
+  const [loadingDone, setLoadingDone] = useState<boolean>(() => {
+    // Synchronously check sessionStorage on first render
+    // so non-home pages never block pointer events
+    if (typeof window === 'undefined') return false;
+    try {
+      return sessionStorage.getItem(SESSION_KEY) === '1';
+    } catch {
+      return false;
+    }
+  });
 
   const handleLoadingComplete = useCallback((): void => {
     setLoadingDone(true);
