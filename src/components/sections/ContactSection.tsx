@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { ContactForm } from '@/components/ui/ContactForm';
 import { SectionTransition } from '@/components/ui/SectionTransition';
-import { SparkCharacter } from '@/components/character/SparkCharacter';
+
 
 const ARC_PATHS = [
   'M 0,0 C 10,-8 20,8 30,-4 C 40,-12 50,6 60,0',
@@ -145,20 +145,7 @@ export const ContactSection: React.FC = () => {
           overflow: 'visible',
         }}
       >
-        {/* Ghost Spark — bottom-left, within section bounds */}
-        <div
-          aria-hidden="true"
-          style={{
-            position: 'absolute',
-            bottom: '24px',
-            left: '24px',
-            opacity: 1,
-            pointerEvents: 'none',
-            zIndex: 2,
-          }}
-        >
-          <SparkCharacter size="ghost" showChat={false} />
-        </div>
+        
 
         {/* Section heading */}
         <div

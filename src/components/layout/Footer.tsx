@@ -1,6 +1,6 @@
 'use client';
 
-import { SparkCharacter } from '@/components/character/SparkCharacter';
+
 import { SITE_NAME } from '@/lib/constants';
 
 type FooterProps = {
@@ -329,29 +329,9 @@ export const Footer: React.FC<FooterProps> = ({ socialLinks }) => {
         </path>
       </svg>
 
-      {/* Spark Character — left side */}
-      <div style={{
-        position: 'absolute',
-        left: '32px',
-        bottom: '80px',
-        zIndex: 4,
-        pointerEvents: 'auto',
-      }}>
-        <SparkCharacter size="footer" showChat={false} />
-      </div>
+      
 
-      {/* Water glow where Spark lands in footer */}
-      <div style={{
-        position: 'absolute',
-        bottom: '100px',
-        left: '40px',
-        width: '340px',
-        height: '80px',
-        background: 'radial-gradient(ellipse 100% 100% at 50% 50%, rgba(0,212,255,0.18) 0%, transparent 65%)',
-        pointerEvents: 'none',
-        filter: 'blur(16px)',
-        zIndex: 3,
-      }} />
+      
 
       {/* Social links + copyright — bottom center */}
       <div style={{ position: 'relative', zIndex: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
