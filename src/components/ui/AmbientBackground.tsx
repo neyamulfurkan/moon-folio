@@ -324,7 +324,7 @@ export const AmbientBackground: React.FC = () => {
         width: '100vw',
         height: '100vh',
         pointerEvents: 'none',
-        zIndex: 9998,
+        zIndex: 0,
         mixBlendMode: 'screen',
       }}
     />

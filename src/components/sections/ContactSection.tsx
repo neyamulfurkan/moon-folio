@@ -154,7 +154,7 @@ export const ContactSection: React.FC = () => {
             left: '24px',
             opacity: 0.18,
             pointerEvents: 'none',
-            zIndex: 0,
+            zIndex: 2,
           }}
         >
           <SparkCharacter size="ghost" showChat={false} />

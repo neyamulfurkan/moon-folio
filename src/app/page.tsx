@@ -135,7 +135,9 @@ export default async function Home(): Promise<React.ReactElement> {
       <ProjectsSection projects={projects} />
       <ExperienceSection experience={experience} />
       <ContactSection />
-      <Footer socialLinks={socialLinks} />
+      <div style={{ position: 'relative', zIndex: 70 }}>
+        <Footer socialLinks={socialLinks} />
+      </div>
     </main>
   );
 }
