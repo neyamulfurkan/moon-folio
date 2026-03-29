@@ -145,14 +145,14 @@ export const ContactSection: React.FC = () => {
           overflow: 'hidden',
         }}
       >
-        {/* Ghost Spark — bottom-right corner */}
+        {/* Ghost Spark — bottom-left, within section bounds */}
         <div
           aria-hidden="true"
           style={{
             position: 'absolute',
-            bottom: '-40px',
-            right: '-60px',
-            opacity: 0.15,
+            bottom: '24px',
+            left: '24px',
+            opacity: 0.18,
             pointerEvents: 'none',
             zIndex: 0,
           }}
