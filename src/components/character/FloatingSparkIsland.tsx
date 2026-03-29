@@ -19,7 +19,7 @@ const SECTION_POSITIONS: Record<string, Pos> = {
   skills:     { scale: 0.30, rightPx: 12,  topPct: 82, opacity: 0.62 },
   projects:   { scale: 0.28, rightPx: 12,  topPct: 85, opacity: 0.60 },
   experience: { scale: 0.26, rightPx: 12,  topPct: 88, opacity: 0.58 },
-  contact:    { scale: 0.55, rightPx: 320, topPct: 48, opacity: 0.85 },
+  contact:    { scale: 0.38, rightPx: 240, topPct: 50, opacity: 0.80 },
 };
 
 const SECTION_IDS = ['hero', 'about', 'skills', 'projects', 'experience', 'contact'] as const;
@@ -86,7 +86,7 @@ const FloatingSparkCore: React.FC = () => {
     skills:     { scale: 0.26, rightPx: -8,  topPct: 88, opacity: 0.62 },
     projects:   { scale: 0.24, rightPx: -8,  topPct: 88, opacity: 0.60 },
     experience: { scale: 0.22, rightPx: -8,  topPct: 88, opacity: 0.58 },
-    contact:    { scale: 0.48, rightPx: 280, topPct: 50, opacity: 0.80 },
+    contact:    { scale: 0.36, rightPx: -50, topPct: 50, opacity: 0.78 },
   };
 
   const activePos = isMobile
