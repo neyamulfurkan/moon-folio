@@ -25,6 +25,14 @@ const SECTION_POSITIONS: Record<string, Pos> = {
 const SECTION_IDS = ['hero', 'about', 'skills', 'projects', 'experience', 'contact'] as const;
 
 const FloatingSparkCore: React.FC = () => {
+  if (typeof window !== 'undefined' && window.location.pathname.startsWith('/admin')) {
+    return null;
+  }
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => {
+    setIsAdmin(window.location.pathname.startsWith('/admin'));
+  }, []);
+
   const [pos, setPos] = useState<Pos>(SECTION_POSITIONS['hero']!);
   const [currentSection, setCurrentSection] = useState<string>('hero');
   const currentSectionRef = useRef<string>('hero');
@@ -92,6 +100,8 @@ const FloatingSparkCore: React.FC = () => {
   const activePos = isMobile
     ? (MOBILE_POSITIONS[currentSection] ?? MOBILE_POSITIONS['hero']!)
     : pos;
+
+  if (isAdmin) return null;
 
   return (
     <div
