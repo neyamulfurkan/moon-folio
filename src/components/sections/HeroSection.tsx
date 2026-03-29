@@ -199,7 +199,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ scenes, cvUrl }) => {
           display: 'grid',
           gridTemplateColumns: '60% 40%',
           height: '100%',
-          padding: '0 48px',
+          padding: '64px 48px 0',
           gap: '32px',
           alignItems: 'center',
         }}

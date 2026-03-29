@@ -576,7 +576,7 @@ const ProjectsMiniMap: React.FC<ProjectsMiniMapProps> = ({
     aria-label="Project navigation map"
     style={{
       position: 'absolute',
-      top: 20,
+      top: 80,
       left: '50%',
       transform: 'translateX(-50%)',
       zIndex: 15,
@@ -857,7 +857,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects, onOv
     <SectionTransition id="projects" label="projects" zIndex={40}>
       <div
         ref={sectionRef}
-        style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}
+        style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden', paddingTop: '64px' }}
       >
         {/* Spark hair watermark */}
         <SparkHairWatermark spike={hairSpike} isReduced={isReduced} />

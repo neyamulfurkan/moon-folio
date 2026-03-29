@@ -520,7 +520,7 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experience
           minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
-          padding: isMobile ? '60px 16px 48px' : '72px 48px 64px',
+          padding: isMobile ? '96px 16px 48px' : '104px 48px 64px',
           overflow: 'hidden',
         }}
       >

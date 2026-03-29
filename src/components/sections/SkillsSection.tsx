@@ -161,7 +161,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
     >
       <div
         ref={sectionRef}
-        className="min-h-screen flex flex-col items-center justify-center py-24 px-6"
+        className="min-h-screen flex flex-col items-center justify-center px-6" style={{ paddingTop: '96px', paddingBottom: '96px' }}
       >
         {/* Section heading */}
         <div className="w-full max-w-5xl mb-12">

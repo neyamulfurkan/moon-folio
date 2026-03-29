@@ -423,7 +423,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
             zIndex: 1,
             maxWidth: '1100px',
             margin: '0 auto',
-            padding: '80px 48px 80px',
+            padding: '112px 48px 80px',
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
             gap: '64px',

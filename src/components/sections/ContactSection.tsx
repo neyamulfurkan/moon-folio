@@ -140,7 +140,7 @@ export const ContactSection: React.FC = () => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '80px 48px',
+          padding: '112px 48px 80px',
           position: 'relative',
           overflow: 'visible',
         }}
