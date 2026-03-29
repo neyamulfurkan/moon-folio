@@ -26,7 +26,8 @@ async function getSignedUploadParams(folder: string): Promise<{
     body: JSON.stringify({ folder }),
   });
   if (!res.ok) throw new Error('Failed to get upload params');
-  return res.json() as Promise<{ signature: string; timestamp: number; apiKey: string; cloudName: string }>;
+  const json = await res.json() as { data?: { signature: string; timestamp: number; apiKey: string; cloudName: string } } & { signature?: string; timestamp?: number; apiKey?: string; cloudName?: string };
+  return (json.data ?? json) as { signature: string; timestamp: number; apiKey: string; cloudName: string };
 }
 
 async function uploadToCloudinary(file: File, folder: string): Promise<string> {
