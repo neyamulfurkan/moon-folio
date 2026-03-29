@@ -146,20 +146,20 @@ export default async function ProjectDetailPage({ params }: PageProps): Promise<
         overflowX: 'hidden',
       }}
     >
-      {/* Ghost Spark background */}
+      {/* Ghost Spark background — desktop only, tucked in bottom-right corner */}
       <div
         aria-hidden="true"
         style={{
           position: 'fixed',
           bottom: 0,
           right: 0,
-          transform: 'none',
-          width: '200px',
-          maxWidth: '30vw',
-          opacity: 0.05,
+          width: '160px',
+          opacity: 0.04,
           pointerEvents: 'none',
           zIndex: 0,
+          display: 'none',
         }}
+        className="spark-ghost-bg"
       >
         <SparkGhost />
       </div>
@@ -537,6 +537,11 @@ export default async function ProjectDetailPage({ params }: PageProps): Promise<
           padding-left: 1em;
           margin-left: 0;
           color: var(--color-text-secondary);
+        }
+        @media (min-width: 1024px) {
+          .spark-ghost-bg {
+            display: block !important;
+          }
         }
       `}</style>
     </main>
