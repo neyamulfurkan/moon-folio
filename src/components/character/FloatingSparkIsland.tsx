@@ -35,6 +35,7 @@ const MOBILE_POSITIONS: Record<string, Pos> = {
 
 const FloatingSparkCore: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [overlayOpen, setOverlayOpen] = useState(false);
   const [pos, setPos] = useState<Pos>(SECTION_POSITIONS['hero']!);
   const [currentSection, setCurrentSection] = useState<string>('hero');
   const currentSectionRef = useRef<string>('hero');
@@ -44,6 +45,15 @@ const FloatingSparkCore: React.FC = () => {
   useEffect(() => {
     const path = window.location.pathname;
     setIsAdmin(path.startsWith('/admin') || path.startsWith('/projects/'));
+
+    const handleOverlayOpen = (): void => setOverlayOpen(true);
+    const handleOverlayClose = (): void => setOverlayOpen(false);
+    window.addEventListener('spark:overlay:open', handleOverlayOpen);
+    window.addEventListener('spark:overlay:close', handleOverlayClose);
+    return () => {
+      window.removeEventListener('spark:overlay:open', handleOverlayOpen);
+      window.removeEventListener('spark:overlay:close', handleOverlayClose);
+    };
   }, []);
 
   useEffect(() => {
@@ -93,7 +103,7 @@ const FloatingSparkCore: React.FC = () => {
     ? (MOBILE_POSITIONS[currentSection] ?? MOBILE_POSITIONS['hero']!)
     : pos;
 
-  if (isAdmin) return null;
+  if (isAdmin || overlayOpen) return null;
 
   return (
     <div

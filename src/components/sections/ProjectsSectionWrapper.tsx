@@ -24,10 +24,12 @@ export const ProjectsSectionWrapper: React.FC<Props> = ({ projects }) => {
 
   const handleOverlayOpen = useCallback((project: Project): void => {
     setOverlayProject(project);
+    window.dispatchEvent(new Event('spark:overlay:open'));
   }, []);
 
   const handleOverlayClose = useCallback((): void => {
     setOverlayProject(null);
+    window.dispatchEvent(new Event('spark:overlay:close'));
   }, []);
 
   return (
