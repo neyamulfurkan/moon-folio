@@ -151,12 +151,12 @@ export default async function ProjectDetailPage({ params }: PageProps): Promise<
         aria-hidden="true"
         style={{
           position: 'fixed',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '480px',
-          maxWidth: '80vw',
-          opacity: 0.06,
+          bottom: 0,
+          right: 0,
+          transform: 'none',
+          width: '200px',
+          maxWidth: '30vw',
+          opacity: 0.05,
           pointerEvents: 'none',
           zIndex: 0,
         }}
