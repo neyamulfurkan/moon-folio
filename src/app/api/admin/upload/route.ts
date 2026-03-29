@@ -37,7 +37,7 @@ export const POST = async (request: Request): Promise<Response> => {
 
   try {
     const params = generateSignedUploadParams(folder);
-    return Response.json({ data: { ...params, folder } }, { status: 200 });
+    return Response.json({ data: { ...params, cloudName: params.cloudName, folder } }, { status: 200 });
   } catch (err) {
     console.error('[upload] Failed to generate signed upload params:', err);
     return Response.json({ error: 'Failed to generate upload parameters' }, { status: 500 });

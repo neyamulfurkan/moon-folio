@@ -72,8 +72,8 @@ export const generateSignedUploadParams = (
   return {
     signature,
     timestamp,
-    apiKey,
-    cloudName,
+    apiKey: apiKey,
+    cloudName: cloudName,
   };
 };
 
