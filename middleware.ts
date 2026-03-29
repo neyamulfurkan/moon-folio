@@ -6,7 +6,9 @@ export function middleware(req: NextRequest): NextResponse | Response {
 
   // Allow login page through always
   if (pathname.startsWith("/admin/login")) {
-    return NextResponse.next();
+    const response = NextResponse.next();
+    response.headers.set('x-pathname', pathname);
+    return response;
   }
 
   // For all other /admin/* routes, check for NextAuth session cookie
@@ -19,9 +21,11 @@ export function middleware(req: NextRequest): NextResponse | Response {
     return NextResponse.redirect(loginUrl);
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+  response.headers.set('x-pathname', pathname);
+  return response;
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ['/admin/:path*', '/((?!_next|favicon\.ico|icon|apple-touch-icon|og\.png|robots\.txt|manifest\.json).*)'],
 };

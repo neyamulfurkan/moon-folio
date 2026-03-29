@@ -6,6 +6,7 @@ import { SITE_NAME, SITE_URL } from '@/lib/constants';
 import { LayoutShell } from '@/components/layout/LayoutShell';
 import { FloatingSparkPortal } from '@/components/character/FloatingSparkIsland';
 import { AmbientBackground } from '@/components/ui/AmbientBackground';
+import { headers } from 'next/headers';
 
 export const metadata: Metadata = {
   title: {
@@ -61,7 +62,10 @@ type RootLayoutProps = {
   children: ReactNode;
 };
 
-const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
+const RootLayout: React.FC<RootLayoutProps> = async ({ children }) => {
+  const headersList = await headers();
+  const pathname = headersList.get('x-pathname') ?? '';
+  const isAdminRoute = pathname.startsWith('/admin');
   return (
     <html lang="en">
       <head>
@@ -107,9 +111,9 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </head>
       <body>
-        <AmbientBackground />
+        {!isAdminRoute && <AmbientBackground />}
         <LayoutShell>{children}</LayoutShell>
-        <FloatingSparkPortal />
+        {!isAdminRoute && <FloatingSparkPortal />}
       </body>
     </html>
   );
