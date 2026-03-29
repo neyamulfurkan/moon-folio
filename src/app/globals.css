@@ -1,4 +1,6 @@
 @tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 .admin-nav-link {
   display: flex;
@@ -36,9 +38,6 @@
   color: var(--color-text-primary);
   border-color: var(--color-accent);
 }
-@tailwind components;
-@tailwind utilities;
-
 :root {
   /* Background colors */
   --color-bg-primary: #07090f;

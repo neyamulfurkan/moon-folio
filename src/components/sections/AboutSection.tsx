@@ -7,12 +7,22 @@ import { SparkCharacter } from '@/components/character/SparkCharacter';
 import { SectionTransition } from '@/components/ui/SectionTransition';
 import { cn } from '@/lib/utils';
 
+type Testimonial = {
+  name: string;
+  role: string;
+  text: string;
+};
+
 type AboutSectionProps = {
   stats?: {
     projects: number;
     years: number;
     hardwareProjects: number;
   };
+  profilePhotoUrl?: string;
+  availabilityStatus?: string;
+  availabilityLabel?: string;
+  testimonials?: Testimonial[];
 };
 
 type StatItem = {
@@ -348,7 +358,13 @@ const CircuitSchematic: React.FC<{ isReduced: boolean }> = ({ isReduced }) => {
   );
 };
 
-export const AboutSection: React.FC<AboutSectionProps> = ({ stats }) => {
+export const AboutSection: React.FC<AboutSectionProps> = ({
+  stats,
+  profilePhotoUrl,
+  availabilityStatus = 'open',
+  availabilityLabel = 'Available for freelance & internships',
+  testimonials = [],
+}) => {
   const isReduced = useReducedMotion();
   const sectionRef = useRef<HTMLDivElement>(null);
   const [sectionVisible, setSectionVisible] = useState(false);
@@ -478,6 +494,34 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ stats }) => {
               </p>
             </div>
 
+            {/* Availability badge */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span
+                style={{
+                  display: 'inline-block',
+                  width: '8px',
+                  height: '8px',
+                  borderRadius: '50%',
+                  backgroundColor:
+                    availabilityStatus === 'open'
+                      ? 'var(--color-success)'
+                      : availabilityStatus === 'busy'
+                      ? 'var(--color-electric)'
+                      : 'var(--color-danger)',
+                  flexShrink: 0,
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '12px',
+                  color: 'var(--color-text-secondary)',
+                }}
+              >
+                {availabilityLabel}
+              </span>
+            </div>
+
             {/* Circuit schematic */}
             <div style={{ marginTop: '8px' }}>
               <div
@@ -495,7 +539,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ stats }) => {
             </div>
           </div>
 
-          {/* Right column: stats */}
+          {/* Right column: stats + photo + testimonials */}
           <div
             style={{
               display: 'flex',
@@ -504,6 +548,23 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ stats }) => {
               paddingTop: '16px',
             }}
           >
+            {/* Profile photo */}
+            {profilePhotoUrl && (
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={profilePhotoUrl}
+                  alt="Moon — profile photo"
+                  style={{
+                    width: '140px',
+                    height: '140px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    border: '2px solid var(--color-border-strong)',
+                  }}
+                />
+              </div>
+            )}
             {/* Stats grid */}
             <div
               style={{
@@ -531,6 +592,73 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ stats }) => {
                   'linear-gradient(to right, var(--color-border-default), transparent)',
               }}
             />
+
+            {/* Testimonials */}
+            {testimonials.length > 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '11px',
+                    color: 'var(--color-text-tertiary)',
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  // what people say
+                </div>
+                {testimonials.map((t, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      padding: '16px',
+                      background: 'var(--color-bg-secondary)',
+                      border: '1px solid var(--color-border-default)',
+                      borderRadius: '8px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '10px',
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontFamily: 'var(--font-display)',
+                        fontSize: '14px',
+                        lineHeight: 1.6,
+                        color: 'var(--color-text-secondary)',
+                        fontStyle: 'italic',
+                      }}
+                    >
+                      &ldquo;{t.text}&rdquo;
+                    </p>
+                    <div>
+                      <div
+                        style={{
+                          fontFamily: 'var(--font-display)',
+                          fontSize: '13px',
+                          fontWeight: 600,
+                          color: 'var(--color-text-primary)',
+                        }}
+                      >
+                        {t.name}
+                      </div>
+                      {t.role && (
+                        <div
+                          style={{
+                            fontFamily: 'var(--font-mono)',
+                            fontSize: '11px',
+                            color: 'var(--color-text-tertiary)',
+                            marginTop: '2px',
+                          }}
+                        >
+                          {t.role}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Tech snapshot */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>

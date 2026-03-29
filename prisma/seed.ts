@@ -14,7 +14,7 @@ async function main(): Promise<void> {
       value:
         'Web applications, embedded systems, and everything in between. If it needs power, I\'m probably interested.',
     },
-    { key: 'hero_scene_1_accentColor', value: '#00d4ff' },
+    { key: 'hero_scene_1_accent_color', value: '#00d4ff' },
 
     // Hero Scene 2
     { key: 'hero_scene_2_eyebrow', value: 'Available for freelance & internships' },
@@ -24,7 +24,7 @@ async function main(): Promise<void> {
       value:
         'Hardware that talks to software. APIs that talk to microcontrollers. I like the whole stack.',
     },
-    { key: 'hero_scene_2_accentColor', value: '#b87333' },
+    { key: 'hero_scene_2_accent_color', value: '#b87333' },
 
     // Hero Scene 3
     { key: 'hero_scene_3_eyebrow', value: 'Next.js · TypeScript · PostgreSQL · KiCad' },
@@ -34,7 +34,7 @@ async function main(): Promise<void> {
       value:
         'Real projects, real users, real constraints. Ask Spark about any of them.',
     },
-    { key: 'hero_scene_3_accentColor', value: '#ffe535' },
+    { key: 'hero_scene_3_accent_color', value: '#ffe535' },
 
     // Social links
     { key: 'social_github', value: '' },
@@ -55,6 +55,24 @@ async function main(): Promise<void> {
 
     // CV
     { key: 'cv_url', value: '' },
+
+    // Profile
+    { key: 'profile_photo_url', value: '' },
+
+    // Availability
+    { key: 'availability_status', value: 'open' },
+    { key: 'availability_label', value: 'Available for freelance & internships' },
+
+    // Testimonials
+    { key: 'testimonial_1_name', value: '' },
+    { key: 'testimonial_1_role', value: '' },
+    { key: 'testimonial_1_text', value: '' },
+    { key: 'testimonial_2_name', value: '' },
+    { key: 'testimonial_2_role', value: '' },
+    { key: 'testimonial_2_text', value: '' },
+    { key: 'testimonial_3_name', value: '' },
+    { key: 'testimonial_3_role', value: '' },
+    { key: 'testimonial_3_text', value: '' },
   ];
 
   for (const setting of settings) {

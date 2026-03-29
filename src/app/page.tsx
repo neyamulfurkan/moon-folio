@@ -33,6 +33,18 @@ const SOCIAL_KEYS = [
   'social_twitter',
   'social_email',
   'cv_url',
+  'profile_photo_url',
+  'availability_status',
+  'availability_label',
+  'testimonial_1_name',
+  'testimonial_1_role',
+  'testimonial_1_text',
+  'testimonial_2_name',
+  'testimonial_2_role',
+  'testimonial_2_text',
+  'testimonial_3_name',
+  'testimonial_3_role',
+  'testimonial_3_text',
 ] as const;
 
 function assembleHeroScenes(
@@ -67,6 +79,11 @@ export default async function Home(): Promise<React.ReactElement> {
   let heroScenes: HeroScene[] = [];
   let socialLinks: Record<string, string> = {};
   let cvUrl = '';
+  let profilePhotoUrl = '';
+  let availabilityStatus = 'open';
+  let availabilityLabel = 'Available for freelance & internships';
+  type Testimonial = { name: string; role: string; text: string };
+  const testimonials: Testimonial[] = [];
 
   try {
     const [
@@ -116,7 +133,28 @@ export default async function Home(): Promise<React.ReactElement> {
       }
     }
     cvUrl = socialMap['cv_url'] ?? '';
+    profilePhotoUrl = socialMap['profile_photo_url'] ?? '';
+    availabilityStatus = socialMap['availability_status'] ?? 'open';
+    availabilityLabel = socialMap['availability_label'] ?? 'Available for freelance & internships';
+
+    for (let i = 1; i <= 3; i++) {
+      const name = socialMap[`testimonial_${i}_name`] ?? '';
+      const role = socialMap[`testimonial_${i}_role`] ?? '';
+      const text = socialMap[`testimonial_${i}_text`] ?? '';
+      if (name && text) {
+        testimonials.push({ name, role, text });
+      }
+    }
+
     delete socialMap['cv_url'];
+    delete socialMap['profile_photo_url'];
+    delete socialMap['availability_status'];
+    delete socialMap['availability_label'];
+    for (let i = 1; i <= 3; i++) {
+      delete socialMap[`testimonial_${i}_name`];
+      delete socialMap[`testimonial_${i}_role`];
+      delete socialMap[`testimonial_${i}_text`];
+    }
     socialLinks = socialMap;
   } catch (err) {
     console.error('[page.tsx] Database fetch failed — rendering with defaults:', err);
@@ -130,7 +168,13 @@ export default async function Home(): Promise<React.ReactElement> {
   return (
     <main id="main">
       <HeroSection scenes={effectiveHeroScenes} cvUrl={cvUrl} />
-      <AboutSection stats={{ projects: projects.length, years: 3, hardwareProjects: hardwareCount }} />
+      <AboutSection
+        stats={{ projects: projects.length, years: 3, hardwareProjects: hardwareCount }}
+        profilePhotoUrl={profilePhotoUrl}
+        availabilityStatus={availabilityStatus}
+        availabilityLabel={availabilityLabel}
+        testimonials={testimonials}
+      />
       <SkillsSection skills={skills} />
        <ProjectsSectionWrapper projects={projects} />
       <ExperienceSection experience={experience} />

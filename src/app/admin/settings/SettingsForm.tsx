@@ -559,6 +559,80 @@ export default function SettingsForm({ initialSettings }: SettingsFormProps) {
         </button>
       </div>
 
+      {/* Profile Photo */}
+      <section>
+        <SectionHeader title="Profile Photo" index={6} />
+        <div className="flex flex-col gap-4">
+          {values['profile_photo_url'] && !errors['profile_photo_url'] && (
+            <div className="rounded overflow-hidden" style={{ border: '1px solid var(--color-border-default)', maxWidth: '120px' }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={values['profile_photo_url']} alt="Profile photo preview" className="w-full h-auto" style={{ maxHeight: '120px', objectFit: 'cover' }} onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
+            </div>
+          )}
+          <FieldGroup label="Profile Photo URL" error={errors['profile_photo_url'] ?? undefined}>
+            <TextInput value={values['profile_photo_url'] ?? ''} onChange={(v) => handleChange('profile_photo_url', v)} placeholder="https://res.cloudinary.com/.../photo.jpg" hasError={!!errors['profile_photo_url']} />
+            <p className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
+              Shown in the About section alongside Spark.
+            </p>
+          </FieldGroup>
+        </div>
+      </section>
+
+      {/* Availability */}
+      <section>
+        <SectionHeader title="Availability" index={7} />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <FieldGroup label="Status" error={errors['availability_status'] ?? undefined}>
+            <select
+              value={values['availability_status'] ?? 'open'}
+              onChange={(e) => handleChange('availability_status', e.target.value)}
+              className="w-full px-3 py-2 rounded text-sm font-mono transition-colors duration-150 focus:outline-none focus:ring-2"
+              style={{ background: 'var(--color-bg-tertiary)', color: 'var(--color-text-primary)', border: '1px solid var(--color-border-default)' }}
+            >
+              <option value="open">Open to opportunities</option>
+              <option value="busy">Currently busy</option>
+              <option value="closed">Not available</option>
+            </select>
+          </FieldGroup>
+          <FieldGroup label="Status Label" error={errors['availability_label'] ?? undefined}>
+            <TextInput value={values['availability_label'] ?? ''} onChange={(v) => handleChange('availability_label', v)} placeholder="Available for freelance & internships" hasError={!!errors['availability_label']} />
+          </FieldGroup>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section>
+        <SectionHeader title="Testimonials" index={8} />
+        <div className="flex flex-col gap-6">
+          {([1, 2, 3] as const).map((i) => (
+            <div key={i} className="flex flex-col gap-4 p-4 rounded-lg" style={{ border: '1px solid var(--color-border-default)', background: 'var(--color-bg-secondary)' }}>
+              <p className="text-xs font-mono uppercase tracking-widest" style={{ color: 'var(--color-text-tertiary)' }}>Testimonial {i}</p>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <FieldGroup label="Name">
+                  <TextInput value={values[`testimonial_${i}_name`] ?? ''} onChange={(v) => handleChange(`testimonial_${i}_name`, v)} placeholder="Jane Smith" />
+                </FieldGroup>
+                <FieldGroup label="Role / Company">
+                  <TextInput value={values[`testimonial_${i}_role`] ?? ''} onChange={(v) => handleChange(`testimonial_${i}_role`, v)} placeholder="CEO at Acme Corp" />
+                </FieldGroup>
+              </div>
+              <FieldGroup label="Quote">
+                <textarea
+                  value={values[`testimonial_${i}_text`] ?? ''}
+                  onChange={(e) => handleChange(`testimonial_${i}_text`, e.target.value)}
+                  placeholder="Moon delivered exceptional work..."
+                  rows={3}
+                  className="w-full px-3 py-2 rounded text-sm font-mono resize-vertical transition-colors duration-150 focus:outline-none focus:ring-2"
+                  style={{ background: 'var(--color-bg-tertiary)', color: 'var(--color-text-primary)', border: '1px solid var(--color-border-default)', minHeight: '80px' } as React.CSSProperties}
+                />
+              </FieldGroup>
+            </div>
+          ))}
+          <p className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+            Leave all fields empty to hide a testimonial. Testimonials with a name and quote will appear in the About section.
+          </p>
+        </div>
+      </section>
+
       {toast && <ToastNotification toast={toast} onDismiss={() => setToast(null)} />}
     </div>
   );
