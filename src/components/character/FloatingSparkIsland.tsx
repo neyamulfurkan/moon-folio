@@ -93,6 +93,11 @@ const FloatingSparkCore: React.FC = () => {
     ? (MOBILE_POSITIONS[currentSection] ?? MOBILE_POSITIONS['hero']!)
     : pos;
 
+  // Hide FloatingSparkIsland on contact page — footer has its own character
+  if (currentSection === 'contact') {
+    return null;
+  }
+
   return (
     <div
       style={{
