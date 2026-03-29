@@ -1,7 +1,4 @@
-import { redirect } from "next/navigation";
-import Link from "next/link";
-import { auth, signOut } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { auth, signOut } from "@/lib/auth";import { prisma } from "@/lib/prisma";
 import { SITE_NAME } from "@/lib/constants";
 
 const NAV_LINKS = [
@@ -20,8 +17,27 @@ export default async function AdminLayout({
 }): Promise<React.ReactElement> {
   const session = await auth();
 
+  // Only redirect from protected pages — login page handles its own rendering
+  // Middleware already blocks unauthenticated access to non-login admin routes
+  // We only run the full sidebar layout when session exists
   if (!session) {
-    redirect("/admin/login");
+    // Render children directly (login page) without the admin shell
+    return (
+      <html lang="en">
+        <body
+          style={{
+            margin: 0,
+            padding: 0,
+            backgroundColor: 'var(--color-bg-primary)',
+            color: 'var(--color-text-primary)',
+            fontFamily: 'var(--font-display)',
+            WebkitFontSmoothing: 'antialiased',
+          }}
+        >
+          {children}
+        </body>
+      </html>
+    );
   }
 
   const unreadCount = await prisma.contactMessage.count({
