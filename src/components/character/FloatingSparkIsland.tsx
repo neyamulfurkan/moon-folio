@@ -42,7 +42,8 @@ const FloatingSparkCore: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    setIsAdmin(window.location.pathname.startsWith('/admin'));
+    const path = window.location.pathname;
+    setIsAdmin(path.startsWith('/admin') || path.startsWith('/projects/'));
   }, []);
 
   useEffect(() => {
