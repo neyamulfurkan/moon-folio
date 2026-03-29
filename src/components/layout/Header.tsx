@@ -128,6 +128,11 @@ export const Header: React.FC<HeaderProps> = ({ cvUrl, githubUrl }) => {
     (e: React.MouseEvent<HTMLAnchorElement>, href: string): void => {
       e.preventDefault();
       const sectionId = href.replace('#', '');
+      // If not on the home page, navigate to home with the hash
+      if (typeof window !== 'undefined' && window.location.pathname !== '/') {
+        window.location.href = `/${href}`;
+        return;
+      }
       scrollToSection(sectionId);
       setMobileMenuOpen(false);
     },
@@ -137,6 +142,11 @@ export const Header: React.FC<HeaderProps> = ({ cvUrl, githubUrl }) => {
   const handleLogoClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>): void => {
       e.preventDefault();
+      // If not on the home page, navigate home
+      if (typeof window !== 'undefined' && window.location.pathname !== '/') {
+        window.location.href = '/';
+        return;
+      }
       scrollToSection('hero');
     },
     [scrollToSection]
@@ -495,8 +505,8 @@ export const Header: React.FC<HeaderProps> = ({ cvUrl, githubUrl }) => {
                 href={link.href}
                 ref={isFirst ? firstFocusableRef : undefined}
                 onClick={(e) => {
+                  setMobileMenuOpen(false);
                   handleNavClick(e, link.href);
-                  hamburgerRef.current?.focus();
                 }}
                 tabIndex={mobileMenuOpen ? 0 : -1}
                 aria-current={isActive ? 'true' : undefined}
