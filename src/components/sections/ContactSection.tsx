@@ -142,7 +142,7 @@ export const ContactSection: React.FC = () => {
           justifyContent: 'center',
           padding: '80px 48px',
           position: 'relative',
-          overflow: 'hidden',
+          overflow: 'visible',
         }}
       >
         {/* Ghost Spark — bottom-left, within section bounds */}
