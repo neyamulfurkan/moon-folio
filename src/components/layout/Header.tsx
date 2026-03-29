@@ -30,6 +30,11 @@ export const Header: React.FC<HeaderProps> = ({ cvUrl, githubUrl }) => {
   const isReduced = useReducedMotion();
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isHomePage, setIsHomePage] = useState(true);
+
+  useEffect(() => {
+    setIsHomePage(window.location.pathname === '/');
+  }, []);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const firstFocusableRef = useRef<HTMLAnchorElement>(null);
@@ -143,29 +148,28 @@ export const Header: React.FC<HeaderProps> = ({ cvUrl, githubUrl }) => {
 
   const handleNavClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>, href: string): void => {
-      e.preventDefault();
-      const sectionId = href.replace('#', '');
-      if (typeof window !== 'undefined' && window.location.pathname !== '/') {
-        // Navigate to home page with hash so the mount effect can scroll to section
-        window.location.assign(`/${href}`);
+      if (!isHomePage) {
+        // Let the browser follow the /#section link natively — no preventDefault
         return;
       }
+      e.preventDefault();
+      const sectionId = href.replace('#', '');
       scrollToSection(sectionId);
       setMobileMenuOpen(false);
     },
-    [scrollToSection]
+    [scrollToSection, isHomePage]
   );
 
   const handleLogoClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>): void => {
-      e.preventDefault();
-      if (typeof window !== 'undefined' && window.location.pathname !== '/') {
-        window.location.assign('/');
+      if (!isHomePage) {
+        // Let browser navigate to / natively
         return;
       }
+      e.preventDefault();
       scrollToSection('hero');
     },
-    [scrollToSection]
+    [scrollToSection, isHomePage]
   );
 
   const toggleMobileMenu = useCallback((): void => {
@@ -518,7 +522,7 @@ export const Header: React.FC<HeaderProps> = ({ cvUrl, githubUrl }) => {
             return (
               <a
                 key={link.sectionId}
-                href={link.href}
+                href={isHomePage ? link.href : `/${link.href}`}
                 ref={isFirst ? firstFocusableRef : undefined}
                 onClick={(e) => {
                   setMobileMenuOpen(false);
