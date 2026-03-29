@@ -170,7 +170,7 @@ export default async function ProjectDetailPage({ params }: PageProps): Promise<
           zIndex: 1,
           maxWidth: '1100px',
           margin: '0 auto',
-          padding: '96px 32px 96px',
+          padding: 'clamp(80px, 8vw, 96px) clamp(16px, 4vw, 32px)',
         }}
       >
         {/* Back navigation */}
@@ -184,7 +184,7 @@ export default async function ProjectDetailPage({ params }: PageProps): Promise<
             style={{
               position: 'relative',
               width: '100%',
-              height: '480px',
+              height: 'clamp(200px, 40vw, 480px)',
               borderRadius: '12px',
               overflow: 'hidden',
               marginBottom: '48px',

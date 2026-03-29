@@ -360,7 +360,7 @@ export const ProjectDetailOverlay: React.FC<ProjectDetailOverlayProps> = ({
               zIndex: 1,
               maxWidth: 900,
               margin: '0 auto',
-              padding: '80px 48px 80px',
+              padding: 'clamp(64px, 8vw, 80px) clamp(16px, 5vw, 48px) clamp(80px, 10vw, 120px)',
             }}
           >
             {/* Category + title */}
@@ -476,7 +476,7 @@ export const ProjectDetailOverlay: React.FC<ProjectDetailOverlayProps> = ({
               <div
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: '1fr 1fr',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
                   gap: 32,
                   marginBottom: 40,
                 }}
@@ -576,7 +576,7 @@ const ProjectsMiniMap: React.FC<ProjectsMiniMapProps> = ({
     aria-label="Project navigation map"
     style={{
       position: 'absolute',
-      top: 80,
+      top: 72,
       left: '50%',
       transform: 'translateX(-50%)',
       zIndex: 15,
@@ -858,6 +858,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects, onOv
       <div
         ref={sectionRef}
         style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden', paddingTop: '64px' }}
+      data-section="projects"
       >
         {/* Spark hair watermark */}
         <SparkHairWatermark spike={hairSpike} isReduced={isReduced} />

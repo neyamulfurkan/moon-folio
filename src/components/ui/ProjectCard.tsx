@@ -69,9 +69,9 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   const cloudinaryUrl = hasImage
     ? (() => {
         const url = project.thumbnailUrl as string;
-        // Insert Cloudinary transformations before the version/public_id segment
-        // Pattern: /upload/ -> /upload/w_1920,h_1080,c_fill,f_auto,q_auto/
-        return url.replace('/upload/', '/upload/w_1920,h_1080,c_fill,f_auto,q_auto/');
+        if (!url.includes('res.cloudinary.com')) return url;
+        // Use smaller size for mobile, larger for desktop via Cloudinary
+        return url.replace('/upload/', '/upload/w_1200,h_800,c_fill,f_auto,q_auto/');
       })()
     : null;
 
@@ -97,7 +97,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           fill
           priority={isActive}
           style={{ objectFit: 'cover' }}
-          sizes="100vw"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
+      quality={85}
         />
       ) : (
         /* Fallback gradient background */
@@ -117,7 +118,11 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'linear-gradient(to right, var(--color-bg-primary) 0%, var(--color-bg-primary) 30%, transparent 60%)',
+            'linear-gradient(to right, var(--color-bg-primary) 0%, var(--color-bg-primary) 40%, rgba(7,9,15,0.85) 60%, rgba(7,9,15,0.4) 80%, transparent 100%)',
+          // Mobile: full gradient for readability
+          ...(typeof window !== 'undefined' && window.innerWidth < 768 ? {
+            background: 'linear-gradient(to top, var(--color-bg-primary) 0%, var(--color-bg-primary) 50%, rgba(7,9,15,0.7) 75%, transparent 100%)'
+          } : {}),
         }}
       />
 
@@ -141,10 +146,11 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
       <div
         className="absolute flex flex-col gap-4"
         style={{
-          left: 48,
+          left: 'clamp(16px, 5vw, 48px)',
           top: '50%',
           transform: 'translateY(-50%)',
-          maxWidth: 520,
+          maxWidth: 'min(520px, calc(100vw - 32px))',
+          paddingRight: 16,
         }}
       >
         {/* Category badge */}
@@ -163,7 +169,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         <h2
           className="font-display font-semibold leading-tight"
           style={{
-            fontSize: 40,
+            fontSize: 'clamp(24px, 6vw, 40px)',
             color: 'var(--color-text-primary)',
             display: '-webkit-box',
             WebkitLineClamp: titleTooLong ? 2 : undefined,
@@ -179,9 +185,13 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           <p
             className="font-display leading-relaxed"
             style={{
-              fontSize: 16,
+              fontSize: 'clamp(13px, 2vw, 16px)',
               color: 'var(--color-text-secondary)',
               maxWidth: 480,
+              display: '-webkit-box',
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
             }}
           >
             {project.shortDesc}
