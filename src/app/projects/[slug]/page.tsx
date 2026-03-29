@@ -5,20 +5,7 @@ import Image from 'next/image';
 import { prisma } from '@/lib/prisma';
 import { SITE_URL, SITE_NAME } from '@/lib/constants';
 import { ElectricButton } from '@/components/ui/ElectricButton';
-import {
-  HairIdle,
-  FaceRelaxed,
-  Sunglasses,
-  Body,
-  LeftArm,
-  RightArm,
-  Legs,
-  Stool,
-  DeskSetup,
-  PCTower,
-  WireAndPulse,
-  ThoughtBubbleCharacter,
-} from '@/components/character/SparkParts';
+
 
 export const revalidate = 3600;
 
@@ -80,27 +67,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-const SparkGhost: React.FC = () => (
-  <svg
-    viewBox="0 0 480 520"
-    role="img"
-    aria-label="Spark — Moon's portfolio character"
-    style={{ width: '100%', height: '100%' }}
-  >
-    <WireAndPulse showPulse={false} />
-    <DeskSetup />
-    <Stool />
-    <PCTower />
-    <Legs />
-    <Body />
-    <LeftArm />
-    <RightArm />
-    <FaceRelaxed />
-    <Sunglasses />
-    <HairIdle />
-    <ThoughtBubbleCharacter symbol="{ }" opacity={0.5} />
-  </svg>
-);
+
 
 const BackLink: React.FC = () => (
   <a
@@ -146,23 +113,7 @@ export default async function ProjectDetailPage({ params }: PageProps): Promise<
         overflowX: 'hidden',
       }}
     >
-      {/* Ghost Spark background — desktop only, tucked in bottom-right corner */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'fixed',
-          bottom: 0,
-          right: 0,
-          width: '160px',
-          opacity: 0.04,
-          pointerEvents: 'none',
-          zIndex: 0,
-          display: 'none',
-        }}
-        className="spark-ghost-bg"
-      >
-        <SparkGhost />
-      </div>
+
 
       <div
         style={{
