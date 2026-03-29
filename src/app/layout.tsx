@@ -64,7 +64,11 @@ type RootLayoutProps = {
 
 const RootLayout: React.FC<RootLayoutProps> = async ({ children }) => {
   const headersList = await headers();
-  const pathname = headersList.get('x-pathname') ?? '';
+  const pathname =
+    headersList.get('x-pathname') ??
+    headersList.get('next-url') ??
+    headersList.get('x-url') ??
+    '';
   const isAdminRoute = pathname.startsWith('/admin');
   return (
     <html lang="en">
@@ -114,6 +118,7 @@ const RootLayout: React.FC<RootLayoutProps> = async ({ children }) => {
         {!isAdminRoute && <AmbientBackground />}
         <LayoutShell>{children}</LayoutShell>
         {!isAdminRoute && <FloatingSparkPortal />}
+        {/* Debug: pathname={pathname} isAdmin={String(isAdminRoute)} */}
       </body>
     </html>
   );
