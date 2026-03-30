@@ -267,6 +267,8 @@ export default function SettingsForm({ initialSettings }: SettingsFormProps) {
   const [toast, setToast] = useState<Toast | null>(null);
   const [cvUploading, setCvUploading] = useState(false);
   const cvInputRef = useRef<HTMLInputElement>(null);
+  const [photoUploading, setPhotoUploading] = useState(false);
+  const photoInputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (key: string, val: string) => {
     setValues((prev) => ({ ...prev, [key]: val }));
@@ -335,6 +337,52 @@ export default function SettingsForm({ initialSettings }: SettingsFormProps) {
       setToast({ type: 'error', message: err instanceof Error ? err.message : 'Failed to save settings' });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handlePhotoUpload = async (file: File) => {
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      setErrors((prev) => ({ ...prev, profile_photo_url: 'Please select a JPG, PNG, or WebP image' }));
+      return;
+    }
+    setPhotoUploading(true);
+    try {
+      const paramsResponse = await fetch('/api/admin/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ folder: 'profile' }),
+      });
+      if (!paramsResponse.ok) throw new Error('Failed to get upload parameters');
+
+      const paramsData = (await paramsResponse.json()) as {
+        data: { signature: string; timestamp: number; apiKey: string; cloudName: string };
+      };
+      const { signature, timestamp, apiKey, cloudName } = paramsData.data;
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('signature', signature);
+      formData.append('timestamp', String(timestamp));
+      formData.append('api_key', apiKey);
+      formData.append('folder', 'profile');
+
+      const uploadResponse = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        { method: 'POST', body: formData }
+      );
+      if (!uploadResponse.ok) throw new Error('Upload to Cloudinary failed');
+
+      const uploadData = (await uploadResponse.json()) as { secure_url: string };
+      handleChange('profile_photo_url', uploadData.secure_url);
+      setToast({ type: 'success', message: 'Profile photo uploaded — save to apply' });
+    } catch (err) {
+      console.error(err);
+      setErrors((prev) => ({
+        ...prev,
+        profile_photo_url: err instanceof Error ? err.message : 'Upload failed',
+      }));
+    } finally {
+      setPhotoUploading(false);
     }
   };
 
@@ -569,11 +617,53 @@ export default function SettingsForm({ initialSettings }: SettingsFormProps) {
               <img src={values['profile_photo_url']} alt="Profile photo preview" className="w-full h-auto" style={{ maxHeight: '120px', objectFit: 'cover' }} onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
             </div>
           )}
-          <FieldGroup label="Profile Photo URL" error={errors['profile_photo_url'] ?? undefined}>
+
+          <div className="flex items-center gap-3">
+            <input
+              ref={photoInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) void handlePhotoUpload(file);
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => photoInputRef.current?.click()}
+              disabled={photoUploading}
+              className="flex items-center gap-2 px-4 py-2 rounded text-sm font-medium transition-opacity duration-150 disabled:opacity-50"
+              style={{ background: 'var(--color-bg-elevated)', color: 'var(--color-text-primary)', border: '1px solid var(--color-border-strong)' }}
+            >
+              {photoUploading ? (
+                <>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="animate-spin">
+                    <circle cx="7" cy="7" r="5.5" stroke="var(--color-text-tertiary)" strokeWidth="1.5" strokeDasharray="8 6" />
+                  </svg>
+                  Uploading…
+                </>
+              ) : (
+                <>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M7 9V2M4 5l3-3 3 3M2 11h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  {values['profile_photo_url'] ? 'Replace Photo' : 'Upload Photo'}
+                </>
+              )}
+            </button>
+            {values['profile_photo_url'] && (
+              <button type="button" onClick={() => handleChange('profile_photo_url', '')} className="text-xs hover:opacity-80 transition-opacity" style={{ color: 'var(--color-text-tertiary)' }}>
+                Remove
+              </button>
+            )}
+          </div>
+          {errors['profile_photo_url'] && (
+            <p className="text-xs" style={{ color: 'var(--color-danger)' }}>{errors['profile_photo_url']}</p>
+          )}
+
+          <FieldGroup label="Or paste image URL directly">
             <TextInput value={values['profile_photo_url'] ?? ''} onChange={(v) => handleChange('profile_photo_url', v)} placeholder="https://res.cloudinary.com/.../photo.jpg" hasError={!!errors['profile_photo_url']} />
-            <p className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
-              Shown in the About section as a circular profile picture. Use a Cloudinary URL or paste the image URL directly.
-            </p>
           </FieldGroup>
         </div>
       </section>
