@@ -39,7 +39,7 @@ const FloatingSparkCore: React.FC = () => {
   const [pos, setPos] = useState<Pos>(SECTION_POSITIONS['hero']!);
   const [currentSection, setCurrentSection] = useState<string>('hero');
   const currentSectionRef = useRef<string>('hero');
-  const scrollProgressRef = useRef(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [isMobile, setIsMobile] = useState(true);
 
   useEffect(() => {
@@ -67,8 +67,9 @@ const FloatingSparkCore: React.FC = () => {
         const scrollTop = window.scrollY;
         const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
 
-        // Update scroll progress (ref only — no re-render)
-        scrollProgressRef.current = scrollHeight > 0 ? Math.min(1, Math.max(0, scrollTop / scrollHeight)) : 0;
+               // Update scroll progress
+        const newProgress = scrollHeight > 0 ? Math.min(1, Math.max(0, scrollTop / scrollHeight)) : 0;
+        setScrollProgress(newProgress);
 
         // Update section position
         const index = Math.round(scrollTop / window.innerHeight);
@@ -122,7 +123,7 @@ const FloatingSparkCore: React.FC = () => {
       }}
       aria-hidden="true"
     >
-      <SparkCharacter size="hero" showChat={false} scrollProgress={scrollProgressRef.current} />
+            <SparkCharacter size="hero" showChat={false} scrollProgress={scrollProgress} />
     </div>
   );
 };

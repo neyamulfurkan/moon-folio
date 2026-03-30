@@ -42,9 +42,7 @@ export const AmbientBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number | null>(null);
   const rainRef = useRef<RainDrop[]>([]);
-  const isMobileRef = useRef<boolean>(
-    typeof window !== 'undefined' && window.innerWidth <= 768
-  );
+  const isMobileRef = useRef<boolean>(false);
   const flyingRef = useRef<FlyingObject[]>([]);
   const lastFlyingSpawnRef = useRef<number>(0);
   const frameRef = useRef<number>(0);
@@ -282,6 +280,9 @@ export const AmbientBackground: React.FC = () => {
   // ── Setup & animation loop ────────────────────────────────────────────────
   useEffect(() => {
     if (isReduced) return;
+
+    // Detect mobile after mount — safe, window is guaranteed here
+    isMobileRef.current = window.innerWidth <= 768;
     if (isMobileRef.current) return;
 
     const canvas = canvasRef.current;
@@ -316,7 +317,6 @@ export const AmbientBackground: React.FC = () => {
   }, [isReduced, initRain, render]);
 
   if (isReduced) return null;
-  if (isMobileRef.current) return null;
 
   return (
     <canvas
