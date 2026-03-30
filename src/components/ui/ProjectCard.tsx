@@ -324,166 +324,250 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         </div>
       ) : (
         <>
-      {/* Background image or fallback */}
-      {cloudinaryUrl ? (
-        <Image
-          src={cloudinaryUrl}
-          alt={project.title}
-          fill
-          priority={isActive}
-          style={{ objectFit: 'cover' }}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
-          quality={85}
-        />
-      ) : (
-        /* Fallback gradient background */
+        {/* Desktop: large contained card with overlay info on thumbnail */}
         <div
-          aria-hidden="true"
-          className="absolute inset-0"
           style={{
-            background:
-              'linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-primary) 100%)',
-          }}
-        />
-      )}
-
-      {/* Gradient overlay — covers left side for text readability */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 pointer-events-none project-image-overlay"
-        style={{
-          background:
-            'linear-gradient(to right, var(--color-bg-primary) 0%, var(--color-bg-primary) 40%, rgba(7,9,15,0.85) 60%, rgba(7,9,15,0.4) 80%, transparent 100%)',
-        }}
-      />
-
-      {/* Fallback centered title when no image */}
-      {!cloudinaryUrl && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <span
-            className="font-display font-semibold text-center px-8"
-            style={{
-              fontSize: 'clamp(24px, 5vw, 64px)',
-              color: 'var(--color-text-tertiary)',
-              opacity: 0.15,
-            }}
-          >
-            {project.title}
-          </span>
-        </div>
-      )}
-
-      {/* Info column */}
-      <div
-        className="absolute flex flex-col gap-4 project-info-col"
-        style={{
-          left: 'clamp(16px, 5vw, 48px)',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          maxWidth: 'min(520px, calc(100vw - 32px))',
-          paddingRight: 16,
-        }}
-      >
-        {/* Category badge */}
-        <span
-          className="font-mono tracking-widest uppercase"
-          style={{
-            fontSize: 11,
-            color: 'var(--color-text-secondary)',
-            letterSpacing: '0.12em',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 'clamp(32px, 5vh, 64px) clamp(32px, 6vw, 96px)',
           }}
         >
-          {project.category}
-        </span>
-
-        {/* Project title */}
-        <h2
-          className="font-display font-semibold leading-tight"
-          style={{
-            fontSize: 'clamp(22px, 5vw, 40px)',
-            textShadow: '0 2px 12px rgba(0,0,0,0.6)',
-            color: 'var(--color-text-primary)',
-            display: '-webkit-box',
-            WebkitLineClamp: titleTooLong ? 2 : undefined,
-            WebkitBoxOrient: titleTooLong ? 'vertical' : undefined,
-            overflow: titleTooLong ? 'hidden' : undefined,
-          }}
-        >
-          {project.title}
-        </h2>
-
-        {/* Short description */}
-        {project.shortDesc && (
-          <p
-            className="font-display leading-relaxed"
+          <div
             style={{
-              fontSize: 'clamp(13px, 2vw, 16px)',
-              color: 'var(--color-text-secondary)',
-              maxWidth: 480,
-              display: '-webkit-box',
-              WebkitLineClamp: 3,
-              WebkitBoxOrient: 'vertical',
+              width: '100%',
+              maxWidth: 900,
+              borderRadius: 24,
               overflow: 'hidden',
-              textShadow: '0 1px 8px rgba(0,0,0,0.5)',
+              position: 'relative',
+              boxShadow: '0 32px 96px rgba(0,0,0,0.7), 0 0 0 1px rgba(0,212,255,0.12)',
+              background: 'var(--color-bg-secondary)',
+              aspectRatio: '16/10',
             }}
           >
-            {project.shortDesc}
-          </p>
-        )}
-
-        {/* Tech stack chips */}
-        {project.techStack.length > 0 && (
-          <div className="flex flex-wrap gap-2" role="list" aria-label="Tech stack">
-            {visibleChips.map((tech) => (
-              <span
-                key={tech}
-                role="listitem"
-                className="font-mono"
+            {cloudinaryUrl ? (
+              <Image
+                src={cloudinaryUrl}
+                alt={project.title}
+                fill
+                priority={isActive}
+                style={{ objectFit: 'cover' }}
+                sizes="(max-width: 1400px) 90vw, 900px"
+                quality={90}
+              />
+            ) : (
+              <div
+                aria-hidden="true"
                 style={{
-                  fontSize: 12,
-                  background: 'var(--color-bg-tertiary)',
-                  color: 'var(--color-text-secondary)',
-                  borderRadius: 4,
-                  padding: '3px 8px',
-                  border: '1px solid var(--color-border-subtle)',
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(135deg, var(--color-bg-tertiary) 0%, var(--color-bg-primary) 100%)',
                 }}
-              >
-                {tech}
-              </span>
-            ))}
-            {extraCount > 0 && (
-              <span
-                role="listitem"
-                className="font-mono"
-                style={{
-                  fontSize: 12,
-                  background: 'var(--color-bg-tertiary)',
-                  color: 'var(--color-text-tertiary)',
-                  borderRadius: 4,
-                  padding: '3px 8px',
-                  border: '1px solid var(--color-border-subtle)',
-                }}
-              >
-                +{extraCount} more
-              </span>
+              />
             )}
+
+            {/* Gradient overlay — bottom up for readability */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(to top, rgba(7,9,15,0.98) 0%, rgba(7,9,15,0.85) 35%, rgba(7,9,15,0.3) 65%, rgba(7,9,15,0.08) 100%)',
+                pointerEvents: 'none',
+              }}
+            />
+
+            {/* Top badges row */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 20,
+                left: 24,
+                right: 24,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                zIndex: 5,
+              }}
+            >
+              <div style={{ display: 'flex', gap: 8 }}>
+                <span
+                  style={{
+                    background: 'rgba(7,9,15,0.7)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(0,212,255,0.25)',
+                    borderRadius: 6,
+                    padding: '4px 10px',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 10,
+                    color: 'var(--color-accent)',
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  {project.category}
+                </span>
+                {project.featured && (
+                  <span
+                    style={{
+                      background: 'rgba(0,212,255,0.12)',
+                      backdropFilter: 'blur(10px)',
+                      border: '1px solid rgba(0,212,255,0.3)',
+                      borderRadius: 6,
+                      padding: '4px 10px',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: 10,
+                      color: 'var(--color-accent)',
+                    }}
+                  >
+                    ★ featured
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Info overlay — bottom of card */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                padding: '32px 32px 28px',
+                zIndex: 5,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 14,
+              }}
+            >
+              <h2
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 'clamp(22px, 3.5vw, 38px)',
+                  fontWeight: 600,
+                  color: 'var(--color-text-primary)',
+                  lineHeight: 1.15,
+                  margin: 0,
+                  textShadow: '0 2px 16px rgba(0,0,0,0.8)',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                }}
+              >
+                {project.title}
+              </h2>
+
+              {project.shortDesc && (
+                <p
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: 'clamp(13px, 1.5vw, 15px)',
+                    color: 'var(--color-text-secondary)',
+                    lineHeight: 1.6,
+                    margin: 0,
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                    maxWidth: 600,
+                  }}
+                >
+                  {project.shortDesc}
+                </p>
+              )}
+
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: 16,
+                  flexWrap: 'wrap',
+                }}
+              >
+                {project.techStack.length > 0 && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }} role="list" aria-label="Tech stack">
+                    {visibleChips.map((tech) => (
+                      <span
+                        key={tech}
+                        role="listitem"
+                        style={{
+                          fontFamily: 'var(--font-mono)',
+                          fontSize: 11,
+                          background: 'rgba(13,17,23,0.85)',
+                          backdropFilter: 'blur(8px)',
+                          color: 'var(--color-text-secondary)',
+                          borderRadius: 4,
+                          padding: '3px 8px',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                        }}
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                    {extraCount > 0 && (
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--color-text-tertiary)', padding: '3px 4px' }}>
+                        +{extraCount} more
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                <button
+                  type="button"
+                  onClick={onViewDetails}
+                  aria-label={`View details for ${project.title}`}
+                  data-cursor="pointer"
+                  style={{
+                    flexShrink: 0,
+                    padding: '10px 24px',
+                    background: 'var(--color-accent)',
+                    color: 'var(--color-bg-primary)',
+                    border: 'none',
+                    borderRadius: 10,
+                    fontFamily: 'var(--font-display)',
+                    fontSize: 14,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    letterSpacing: '0.02em',
+                    boxShadow: '0 0 20px rgba(0,212,255,0.3)',
+                    transition: 'box-shadow 200ms, transform 200ms',
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 32px rgba(0,212,255,0.5)';
+                    (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 20px rgba(0,212,255,0.3)';
+                    (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)';
+                  }}
+                >
+                  View Details →
+                </button>
+              </div>
+            </div>
+
+            {/* Cyan accent top line */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 2,
+                background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)',
+                opacity: 0.6,
+                zIndex: 6,
+              }}
+            />
           </div>
-        )}
-
-        {/* View Details CTA */}
-        <div className="mt-2">
-          <ElectricButton
-            variant="primary"
-            onClick={onViewDetails}
-            aria-label={`View details for ${project.title}`}
-          >
-            View Details
-          </ElectricButton>
         </div>
-      </div>
-
         </>
-      )} {/* end mobile/desktop conditional */}
+      )} {/* end mobile/desktop conditional */
 
       {/* Mini-shock flash overlay */}
       {flashVisible && (
