@@ -1,7 +1,7 @@
 import { auth } from '@/lib/auth';
 import { generateSignedUploadParams } from '@/lib/cloudinary';
 
-const ALLOWED_FOLDERS = ['projects', 'gallery', 'cv'] as const;
+const ALLOWED_FOLDERS = ['projects', 'gallery', 'cv', 'profile'] as const;
 type AllowedFolder = (typeof ALLOWED_FOLDERS)[number];
 
 const isAllowedFolder = (folder: string): folder is AllowedFolder =>

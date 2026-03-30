@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { SparkCharacter } from '@/components/character/SparkCharacter';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { ContactForm } from '@/components/ui/ContactForm';
@@ -16,6 +17,7 @@ const ARC_PATHS = [
 const CHECKMARK_PATH = 'M 8,24 L 20,36 L 44,12';
 
 export const ContactSection: React.FC = () => {
+  const floatingSparkRef = useRef<{ triggerShock: () => Promise<void> } | null>(null);
   const isReduced = useReducedMotion();
 
   const [successState, setSuccessState] = useState(false);
@@ -146,6 +148,21 @@ export const ContactSection: React.FC = () => {
         }}
       >
         
+
+        {/* Ghost Spark — floating in background */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            bottom: '80px',
+            right: '40px',
+            opacity: 0.25,
+            pointerEvents: 'none',
+            zIndex: 0,
+          }}
+        >
+          <SparkCharacter size="ghost" showChat={false} className="hidden lg:block" />
+        </div>
 
         {/* Section heading */}
         <div

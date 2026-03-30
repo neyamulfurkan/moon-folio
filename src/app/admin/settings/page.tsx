@@ -36,7 +36,7 @@ export default async function AdminSettingsPage(): Promise<React.ReactElement> {
           className="text-sm mt-1"
           style={{ color: 'var(--color-text-secondary)' }}
         >
-          Manage hero scenes, social links, SEO metadata, and CV upload.
+          Manage hero scenes, profile photo, social links, SEO metadata, and CV upload.
         </p>
       </div>
       <SettingsForm initialSettings={settings} />

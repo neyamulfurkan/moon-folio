@@ -1,10 +1,12 @@
 'use client';
 
-
+import React from 'react';
+import { SparkCharacter } from '@/components/character/SparkCharacter';
 import { SITE_NAME } from '@/lib/constants';
 
 type FooterProps = {
   socialLinks?: Record<string, string>;
+  size?: 'footer';
 };
 
 const GitHubIcon: React.FC = () => (
@@ -111,14 +113,14 @@ const resolveSocialLinks = (
   return items;
 };
 
-export const Footer: React.FC<FooterProps> = ({ socialLinks }) => {
+export const Footer: React.FC<FooterProps> = ({ socialLinks, size = 'footer' }) => {
   const links = resolveSocialLinks(socialLinks);
 
   return (
     <footer
       data-footer=""
       style={{
-        minHeight: '420px',
+        minHeight: '220px',
         background: 'linear-gradient(180deg, #02080f 0%, #030a12 40%, #020608 100%)',
         borderTop: 'none',
         display: 'flex',
@@ -332,6 +334,11 @@ export const Footer: React.FC<FooterProps> = ({ socialLinks }) => {
       
 
       
+
+      {/* Spark character — centered in footer */}
+      <div style={{ position: 'relative', zIndex: 3, marginBottom: '-80px', display: 'flex', justifyContent: 'center' }}>
+        <SparkCharacter size="footer" showChat={false} />
+      </div>
 
       {/* Social links + copyright — bottom center */}
       <div style={{ position: 'relative', zIndex: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
