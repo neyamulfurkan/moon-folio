@@ -721,41 +721,96 @@ const MobileProjectsView: React.FC<{
         ))}
       </div>
 
-      {/* Dots */}
-      {projects.length > 1 && (
-        <div
-          aria-hidden="true"
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: 8,
-            paddingBottom: 24,
-            paddingTop: 12,
-          }}
-        >
-          {projects.map((_, i) => (
-            <div
-              key={i}
-              onClick={() => {
-                const container = scrollRef.current;
-                if (!container) return;
-                const card = container.children[i] as HTMLElement;
-                card?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-              }}
-              style={{
-                width: activeIndex === i ? 20 : 6,
-                height: 6,
-                borderRadius: 3,
-                background: activeIndex === i ? 'var(--color-accent)' : 'var(--color-border-strong)',
-                transition: isReduced ? 'none' : 'all 300ms cubic-bezier(0.4,0,0.2,1)',
-                cursor: 'pointer',
-                boxShadow: activeIndex === i ? '0 0 8px var(--color-accent)' : 'none',
-              }}
-            />
-          ))}
-        </div>
-      )}
+      {/* Bottom bar: dots + swipe hint */}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 8,
+          paddingBottom: 20,
+          paddingTop: 8,
+        }}
+      >
+        {/* Swipe hint — only show when multiple projects */}
+        {projects.length > 1 && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              fontFamily: 'var(--font-mono)',
+              fontSize: 10,
+              color: 'var(--color-text-tertiary)',
+              letterSpacing: '0.06em',
+              opacity: activeIndex === 0 ? 1 : 0,
+              transition: isReduced ? 'none' : 'opacity 400ms',
+              pointerEvents: 'none',
+            }}
+            aria-hidden="true"
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M9 7H5M5 7L7 5M5 7L7 9" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M5 7H9M9 7L7 5M9 7L7 9" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" transform="translate(0,0)" opacity="0"/>
+            </svg>
+            swipe to explore {projects.length} projects
+          </div>
+        )}
+
+        {/* Dots */}
+        {projects.length > 1 && (
+          <div
+            aria-label={`Project ${activeIndex + 1} of ${projects.length}`}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 6,
+            }}
+          >
+            {projects.map((p, i) => (
+              <button
+                key={p.id}
+                type="button"
+                aria-label={`Go to project ${i + 1}: ${p.title}`}
+                onClick={() => {
+                  const container = scrollRef.current;
+                  if (!container) return;
+                  const card = container.children[i] as HTMLElement;
+                  card?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }}
+                style={{
+                  width: activeIndex === i ? 22 : 6,
+                  height: 6,
+                  borderRadius: 3,
+                  background: activeIndex === i ? 'var(--color-accent)' : 'var(--color-border-strong)',
+                  transition: isReduced ? 'none' : 'all 300ms cubic-bezier(0.4,0,0.2,1)',
+                  cursor: 'pointer',
+                  border: 'none',
+                  padding: 0,
+                  flexShrink: 0,
+                  boxShadow: activeIndex === i ? '0 0 8px var(--color-accent)' : 'none',
+                }}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Single project label */}
+        {projects.length === 1 && (
+          <div
+            aria-hidden="true"
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 10,
+              color: 'var(--color-text-tertiary)',
+              letterSpacing: '0.06em',
+            }}
+          >
+            // 1 project
+          </div>
+        )}
+      </div>
     </div>
   );
 };

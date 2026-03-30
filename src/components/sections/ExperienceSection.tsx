@@ -452,14 +452,187 @@ const HorizontalPCBWire: React.FC<HorizWireProps> = ({
 
 // ── main component ──────────────────────────────────────────────────────────
 
+const MobileExperienceView: React.FC<{
+  experience: Experience[];
+  isReduced: boolean;
+}> = ({ experience, isReduced }) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    const cards = Array.from(container.children) as HTMLElement[];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+            const idx = cards.indexOf(entry.target as HTMLElement);
+            if (idx !== -1) setActiveIndex(idx);
+          }
+        });
+      },
+      { root: container, threshold: 0.6 }
+    );
+    cards.forEach((card) => observer.observe(card));
+    return () => observer.disconnect();
+  }, [experience]);
+
+  return (
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', paddingTop: 64 }}>
+      {/* Header */}
+      <div style={{ padding: '24px 20px 12px', flexShrink: 0 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 600, color: 'var(--color-text-primary)', margin: 0, fontFamily: 'var(--font-display)' }}>
+          <span style={{ fontFamily: 'var(--font-mono)' }}>timeline</span>
+          <span style={{ color: 'var(--color-accent)', fontFamily: 'var(--font-mono)' }}>.exec()</span>
+        </h2>
+        <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--color-text-tertiary)', marginTop: 6, letterSpacing: '0.06em' }}>
+          swipe to explore {experience.length} entr{experience.length === 1 ? 'y' : 'ies'}
+        </p>
+      </div>
+
+      {/* Scroll container */}
+      <div
+        ref={scrollRef}
+        style={{
+          flex: 1,
+          display: 'flex',
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          scrollSnapType: 'x mandatory',
+          scrollBehavior: isReduced ? 'auto' : 'smooth',
+          WebkitOverflowScrolling: 'touch',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          alignItems: 'center',
+        }}
+      >
+        {experience.map((exp, i) => {
+          const isActive = i === activeIndex;
+          const typeColor = exp.type === 'work' ? 'var(--color-accent)' : 'var(--color-amber, #e8880a)';
+          const dateRange = exp.isPresent
+            ? `${getYear(exp.startDate)}–Present`
+            : `${getYear(exp.startDate)}–${exp.endDate ? getYear(exp.endDate) : ''}`;
+          return (
+            <div
+              key={exp.id}
+              style={{
+                scrollSnapAlign: 'center',
+                flexShrink: 0,
+                width: 'calc(100vw - 48px)',
+                marginLeft: i === 0 ? '24px' : '12px',
+                marginRight: i === experience.length - 1 ? '24px' : '12px',
+                height: 'calc(100% - 16px)',
+                maxHeight: 520,
+                borderRadius: 20,
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+                background: 'var(--color-bg-secondary)',
+                border: isActive ? `1px solid color-mix(in srgb, ${typeColor} 35%, transparent)` : '1px solid var(--color-border-default)',
+                boxShadow: isActive ? `0 0 0 1px color-mix(in srgb, ${typeColor} 10%, transparent), 0 24px 64px rgba(0,0,0,0.7)` : '0 8px 32px rgba(0,0,0,0.4)',
+                transform: isActive ? 'scale(1)' : 'scale(0.94)',
+                transition: isReduced ? 'none' : 'transform 400ms cubic-bezier(0.4,0,0.2,1), box-shadow 400ms, border-color 400ms',
+                willChange: 'transform',
+                position: 'relative',
+              }}
+            >
+              {/* Top accent bar */}
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: typeColor, opacity: isActive ? 0.8 : 0.3, transition: isReduced ? 'none' : 'opacity 400ms' }} />
+
+              {/* Card content */}
+              <div style={{ flex: 1, padding: '24px 20px 20px', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                {/* Top row */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--color-text-tertiary)', letterSpacing: '0.08em' }}>IC-{(i + 1).toString().padStart(2, '0')}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: typeColor, background: `color-mix(in srgb, ${typeColor} 12%, transparent)`, border: `1px solid color-mix(in srgb, ${typeColor} 30%, transparent)`, borderRadius: 4, padding: '2px 6px' }}>{exp.type}</span>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--color-text-tertiary)' }}>{i + 1}/{experience.length}</span>
+                  </div>
+                </div>
+
+                {/* Date */}
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--color-text-tertiary)', marginBottom: 8 }}>{dateRange}</div>
+
+                {/* Role */}
+                <h3 style={{ fontSize: 20, fontWeight: 600, color: 'var(--color-text-primary)', lineHeight: 1.2, marginBottom: 4, fontFamily: 'var(--font-display)' }}>{exp.role}</h3>
+                <p style={{ fontSize: 14, fontWeight: 500, color: 'var(--color-text-secondary)', marginBottom: 16, fontFamily: 'var(--font-display)' }}>{exp.organization}</p>
+
+                {/* Divider */}
+                <div style={{ height: 1, background: 'var(--color-border-subtle)', marginBottom: 14, flexShrink: 0 }} />
+
+                {/* Bullets */}
+                <div style={{ flex: 1, overflowY: 'auto' }}>
+                  <ul style={{ display: 'flex', flexDirection: 'column', gap: 8, listStyle: 'none', padding: 0, margin: 0 }}>
+                    {exp.description.map((item, bi) => (
+                      <li key={bi} style={{ display: 'flex', gap: 8, fontSize: 13, color: 'var(--color-text-secondary)', lineHeight: 1.55 }}>
+                        <span style={{ color: typeColor, fontSize: 11, lineHeight: '1.8', flexShrink: 0 }} aria-hidden="true">›</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Dots */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, paddingBottom: 20, paddingTop: 10 }}>
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+          {experience.map((exp, i) => {
+            const typeColor = exp.type === 'work' ? 'var(--color-accent)' : 'var(--color-amber, #e8880a)';
+            return (
+              <button
+                key={exp.id}
+                type="button"
+                aria-label={`Go to ${exp.organization}`}
+                onClick={() => {
+                  const container = scrollRef.current;
+                  if (!container) return;
+                  const card = container.children[i] as HTMLElement;
+                  card?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }}
+                style={{
+                  width: activeIndex === i ? 22 : 6,
+                  height: 6,
+                  borderRadius: 3,
+                  background: activeIndex === i ? typeColor : 'var(--color-border-strong)',
+                  transition: isReduced ? 'none' : 'all 300ms cubic-bezier(0.4,0,0.2,1)',
+                  cursor: 'pointer',
+                  border: 'none',
+                  padding: 0,
+                  flexShrink: 0,
+                  boxShadow: activeIndex === i ? `0 0 8px ${typeColor}` : 'none',
+                }}
+              />
+            );
+          })}
+        </div>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--color-text-tertiary)', letterSpacing: '0.06em' }}>
+          {experience[activeIndex]?.organization} · {activeIndex + 1}/{experience.length}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experience }) => {
   const isReduced = useReducedMotion();
+  const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const headingParenControls = useAnimationControls();
   const [headingGlowed, setHeadingGlowed] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
   const isVisibleRef = useRef(false);
+
+  useEffect(() => {
+    const check = (): void => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check, { passive: true });
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   useEffect(() => {
     const check = (): void => setIsMobile(window.innerWidth < 640);
@@ -510,6 +683,14 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experience
 
   const hasPrev = activeIndex > 0;
   const hasNext = activeIndex < experience.length - 1;
+
+  if (isMobile) {
+    return (
+      <SectionTransition id="experience" label="experience.exec()" zIndex={50}>
+        <MobileExperienceView experience={experience} isReduced={isReduced} />
+      </SectionTransition>
+    );
+  }
 
   return (
     <SectionTransition id="experience" label="experience.exec()" zIndex={50}>

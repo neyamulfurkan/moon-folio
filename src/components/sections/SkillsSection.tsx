@@ -32,10 +32,192 @@ const EmptyCardContent: React.FC<{ category: string }> = ({ category }) => (
   </div>
 );
 
+const MobileSkillsView: React.FC<{
+  groupedSkills: Record<string, Skill[]>;
+  isReduced: boolean;
+}> = ({ groupedSkills, isReduced }) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const categories = SKILL_CATEGORIES as unknown as string[];
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    const cards = Array.from(container.children) as HTMLElement[];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+            const idx = cards.indexOf(entry.target as HTMLElement);
+            if (idx !== -1) setActiveIndex(idx);
+          }
+        });
+      },
+      { root: container, threshold: 0.6 }
+    );
+    cards.forEach((card) => observer.observe(card));
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', paddingTop: 64 }}>
+      {/* Header */}
+      <div style={{ padding: '24px 20px 12px', flexShrink: 0 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 600, color: 'var(--color-text-primary)', margin: 0 }}>
+          <span style={{ fontFamily: 'var(--font-mono)' }}>skills</span>
+          <span style={{ color: 'var(--color-accent)', fontFamily: 'var(--font-mono)' }}>.deck()</span>
+        </h2>
+        <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--color-text-tertiary)', marginTop: 6, letterSpacing: '0.06em' }}>
+          swipe to explore {categories.length} categories
+        </p>
+      </div>
+
+      {/* Scroll container */}
+      <div
+        ref={scrollRef}
+        style={{
+          flex: 1,
+          display: 'flex',
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          scrollSnapType: 'x mandatory',
+          scrollBehavior: isReduced ? 'auto' : 'smooth',
+          WebkitOverflowScrolling: 'touch',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          alignItems: 'center',
+          paddingBottom: 0,
+        }}
+      >
+        {categories.map((cat, i) => {
+          const catSkills = groupedSkills[cat] ?? [];
+          const isActive = i === activeIndex;
+          const label = CATEGORY_LABELS[cat] ?? cat;
+          return (
+            <div
+              key={cat}
+              style={{
+                scrollSnapAlign: 'center',
+                flexShrink: 0,
+                width: 'calc(100vw - 48px)',
+                marginLeft: i === 0 ? '24px' : '12px',
+                marginRight: i === categories.length - 1 ? '24px' : '12px',
+                height: 'calc(100% - 16px)',
+                maxHeight: 520,
+                borderRadius: 20,
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+                background: 'var(--color-bg-secondary)',
+                border: isActive ? '1px solid rgba(0,212,255,0.35)' : '1px solid var(--color-border-default)',
+                boxShadow: isActive ? '0 0 0 1px rgba(0,212,255,0.1), 0 24px 64px rgba(0,0,0,0.7)' : '0 8px 32px rgba(0,0,0,0.4)',
+                transform: isActive ? 'scale(1)' : 'scale(0.94)',
+                transition: isReduced ? 'none' : 'transform 400ms cubic-bezier(0.4,0,0.2,1), box-shadow 400ms, border-color 400ms',
+                willChange: 'transform',
+              }}
+            >
+              {/* Card header */}
+              <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid var(--color-border-subtle)', flexShrink: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--color-accent)', letterSpacing: '0.12em', textTransform: 'uppercase', background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.2)', borderRadius: 6, padding: '2px 8px' }}>{label}</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--color-text-tertiary)' }}>{i + 1}/{categories.length}</span>
+                </div>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 600, color: 'var(--color-text-primary)' }}>{catSkills.length} skill{catSkills.length !== 1 ? 's' : ''}</div>
+                {/* Cyan accent line */}
+                <div style={{ marginTop: 12, height: 2, background: 'linear-gradient(to right, var(--color-accent), transparent)', opacity: isActive ? 0.7 : 0.2, transition: isReduced ? 'none' : 'opacity 400ms', borderRadius: 1 }} />
+              </div>
+
+              {/* Skills list */}
+              <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {catSkills.length === 0 ? (
+                  <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--color-text-tertiary)' }}>// no skills yet</div>
+                ) : (
+                  catSkills.map((skill) => (
+                    <div
+                      key={skill.id}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '10px 14px',
+                        background: 'var(--color-bg-tertiary)',
+                        borderRadius: 10,
+                        border: '1px solid var(--color-border-subtle)',
+                      }}
+                    >
+                      <span style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 500, color: 'var(--color-text-primary)' }}>{skill.name}</span>
+                      <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+                        {Array.from({ length: 5 }).map((_, li) => (
+                          <div
+                            key={li}
+                            style={{
+                              width: 6,
+                              height: 6,
+                              borderRadius: '50%',
+                              background: li < skill.proficiency ? 'var(--color-accent)' : 'var(--color-border-default)',
+                              boxShadow: li < skill.proficiency ? '0 0 4px var(--color-accent)' : 'none',
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Dots */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, paddingBottom: 20, paddingTop: 10 }}>
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+          {categories.map((cat, i) => (
+            <button
+              key={cat}
+              type="button"
+              aria-label={`Go to ${CATEGORY_LABELS[cat] ?? cat}`}
+              onClick={() => {
+                const container = scrollRef.current;
+                if (!container) return;
+                const card = container.children[i] as HTMLElement;
+                card?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+              }}
+              style={{
+                width: activeIndex === i ? 22 : 6,
+                height: 6,
+                borderRadius: 3,
+                background: activeIndex === i ? 'var(--color-accent)' : 'var(--color-border-strong)',
+                transition: isReduced ? 'none' : 'all 300ms cubic-bezier(0.4,0,0.2,1)',
+                cursor: 'pointer',
+                border: 'none',
+                padding: 0,
+                flexShrink: 0,
+                boxShadow: activeIndex === i ? '0 0 8px var(--color-accent)' : 'none',
+              }}
+            />
+          ))}
+        </div>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--color-text-tertiary)', letterSpacing: '0.06em' }}>
+          {CATEGORY_LABELS[categories[activeIndex] ?? ''] ?? categories[activeIndex]} · {activeIndex + 1}/{categories.length}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
   const [activeCategory, setActiveCategory] = useState<0 | 1 | 2 | 3>(0);
   const [direction, setDirection] = useState<'left' | 'right'>('right');
   const isReduced = useReducedMotion();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = (): void => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   const sectionRef = useRef<HTMLDivElement>(null);
   const isSectionVisibleRef = useRef(false);
@@ -151,6 +333,14 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
     const offset = (categoryIndex - activeCategory + 4) % 4;
     return offset as 0 | 1 | 2 | 3;
   };
+
+  if (isMobile) {
+    return (
+      <SectionTransition id="skills" label="skills" zIndex={30} bgColor="primary">
+        <MobileSkillsView groupedSkills={groupedSkills} isReduced={isReduced} />
+      </SectionTransition>
+    );
+  }
 
   return (
     <SectionTransition
