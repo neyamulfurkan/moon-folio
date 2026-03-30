@@ -30,7 +30,8 @@ type FlyingObject = {
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
-const RAIN_COUNT = 80;
+const RAIN_COUNT_DESKTOP = 80;
+const RAIN_COUNT_MOBILE = 30;
 const MAX_FLYING_OBJECTS = 4;
 const FLYING_SPAWN_INTERVAL = 4000;
 const MAX_PLANES = 1; // only 1 plane at a time ever
@@ -46,10 +47,11 @@ export const AmbientBackground: React.FC = () => {
   const flyingRef = useRef<FlyingObject[]>([]);
   const lastFlyingSpawnRef = useRef<number>(0);
   const frameRef = useRef<number>(0);
+  const rainCountRef = useRef<number>(RAIN_COUNT_DESKTOP);
 
   // ── Initialise rain drops ──────────────────────────────────────────────────
   const initRain = useCallback((w: number, h: number): void => {
-    rainRef.current = Array.from({ length: RAIN_COUNT }, () => ({
+    rainRef.current = Array.from({ length: rainCountRef.current }, () => ({
       x: Math.random() * w,
       y: Math.random() * h,
       length: 8 + Math.random() * 14,
@@ -283,7 +285,7 @@ export const AmbientBackground: React.FC = () => {
 
     // Detect mobile after mount — safe, window is guaranteed here
     isMobileRef.current = window.innerWidth <= 768;
-    if (isMobileRef.current) return;
+    rainCountRef.current = isMobileRef.current ? RAIN_COUNT_MOBILE : RAIN_COUNT_DESKTOP;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
