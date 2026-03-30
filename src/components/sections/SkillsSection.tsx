@@ -351,82 +351,165 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
     >
       <div
         ref={sectionRef}
-        className="min-h-screen flex flex-col items-center justify-center px-6" style={{ paddingTop: '96px', paddingBottom: '96px' }}
+        style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', padding: '104px 48px 80px' }}
       >
-        {/* Section heading */}
-        <div className="w-full max-w-5xl mb-12">
-          <h2
-            className="text-3xl font-semibold mb-2"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            <span style={{ fontFamily: 'var(--font-mono)' }}>skills</span>
-            <span style={{ color: 'var(--color-accent)', fontFamily: 'var(--font-mono)' }}>
-              .deck
-            </span>
-            <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-accent)' }}>
-              ()
-            </span>
-          </h2>
-          <p
-            className="text-sm font-mono"
-            style={{ color: 'var(--color-text-tertiary)' }}
-          >
-            {/* keyboard hint */}
-            <span className="hidden md:inline">← → to navigate · </span>
-            click a category to jump
-          </p>
+        {/* ── Desktop: two-column layout ── */}
+        <div style={{ maxWidth: 1200, margin: '0 auto', width: '100%', display: 'grid', gridTemplateColumns: '280px 1fr', gap: 64, alignItems: 'start' }}>
+
+          {/* Left: heading + category nav */}
+          <div style={{ position: 'sticky', top: 96 }}>
+            <div style={{ marginBottom: 40 }}>
+              <h2 style={{ fontSize: 36, fontWeight: 600, color: 'var(--color-text-primary)', lineHeight: 1.1, marginBottom: 8 }}>
+                <span style={{ fontFamily: 'var(--font-mono)', display: 'block', fontSize: 12, color: 'var(--color-text-tertiary)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 8 }}>// section_03</span>
+                <span style={{ fontFamily: 'var(--font-mono)' }}>skills</span>
+                <span style={{ color: 'var(--color-accent)', fontFamily: 'var(--font-mono)' }}>.deck()</span>
+              </h2>
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--color-text-tertiary)', letterSpacing: '0.06em' }}>← → to navigate</p>
+            </div>
+
+            {/* Category nav — vertical list */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }} role="tablist" aria-label="Skill categories">
+              {SKILL_CATEGORIES.map((cat, idx) => {
+                const isActiveCat = idx === activeCategory;
+                const catSkills = groupedSkills[cat] ?? [];
+                return (
+                  <button
+                    key={cat}
+                    role="tab"
+                    aria-selected={isActiveCat}
+                    onClick={() => goToCategory(idx as 0 | 1 | 2 | 3)}
+                    data-cursor="pointer"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '12px 16px',
+                      borderRadius: 10,
+                      border: isActiveCat ? '1px solid rgba(0,212,255,0.3)' : '1px solid transparent',
+                      background: isActiveCat ? 'rgba(0,212,255,0.08)' : 'transparent',
+                      cursor: 'pointer',
+                      transition: isReduced ? 'none' : 'all 200ms',
+                      textAlign: 'left',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <div style={{ width: 6, height: 6, borderRadius: '50%', background: isActiveCat ? 'var(--color-accent)' : 'var(--color-border-strong)', boxShadow: isActiveCat ? '0 0 8px var(--color-accent)' : 'none', transition: isReduced ? 'none' : 'all 200ms', flexShrink: 0 }} />
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: isActiveCat ? 'var(--color-accent)' : 'var(--color-text-secondary)', fontWeight: isActiveCat ? 500 : 400, transition: isReduced ? 'none' : 'color 200ms' }}>{CATEGORY_LABELS[cat] ?? cat}</span>
+                    </div>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: isActiveCat ? 'var(--color-accent)' : 'var(--color-text-tertiary)', background: isActiveCat ? 'rgba(0,212,255,0.12)' : 'var(--color-bg-tertiary)', border: '1px solid var(--color-border-subtle)', borderRadius: 4, padding: '1px 6px', transition: isReduced ? 'none' : 'all 200ms' }}>{catSkills.length}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Keyboard hint */}
+            <div style={{ marginTop: 32, padding: '12px 16px', background: 'var(--color-bg-secondary)', borderRadius: 8, border: '1px solid var(--color-border-subtle)' }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--color-text-tertiary)', marginBottom: 6, letterSpacing: '0.06em' }}>// navigation</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {[['← →', 'switch category'], ['click', 'select category']].map(([key, desc]) => (
+                  <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--color-accent)', background: 'rgba(0,212,255,0.08)', border: '1px solid rgba(0,212,255,0.2)', borderRadius: 4, padding: '1px 6px', flexShrink: 0 }}>{key}</span>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--color-text-tertiary)' }}>{desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right: active category skills grid */}
+          <div style={{ minHeight: 500 }}>
+            {SKILL_CATEGORIES.map((cat, idx) => {
+              if (idx !== activeCategory) return null;
+              const catSkills = groupedSkills[cat] ?? [];
+              const label = CATEGORY_LABELS[cat] ?? cat;
+              return (
+                <motion.div
+                  key={cat}
+                  initial={{ opacity: 0, y: isReduced ? 0 : 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={isReduced ? { duration: 0.1 } : { duration: 0.3, ease: 'easeOut' }}
+                >
+                  {/* Category header */}
+                  <div style={{ marginBottom: 32, paddingBottom: 20, borderBottom: '1px solid var(--color-border-subtle)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--color-text-tertiary)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6 }}>// {label.toLowerCase()}_skills</div>
+                        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 600, color: 'var(--color-text-primary)', lineHeight: 1.1 }}>{label}</h3>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 32, fontWeight: 600, color: 'var(--color-accent)', lineHeight: 1 }}>{catSkills.length}</div>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--color-text-tertiary)' }}>skill{catSkills.length !== 1 ? 's' : ''}</div>
+                      </div>
+                    </div>
+                    {/* Accent bar */}
+                    <div style={{ marginTop: 16, height: 2, background: 'linear-gradient(to right, var(--color-accent), transparent)', borderRadius: 1 }} />
+                  </div>
+
+                  {/* Skills grid */}
+                  {catSkills.length === 0 ? (
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 200, fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--color-text-tertiary)' }}>// no {label.toLowerCase()} skills yet</div>
+                  ) : (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16 }}>
+                      {catSkills.map((skill, si) => (
+                        <motion.div
+                          key={skill.id}
+                          initial={{ opacity: 0, y: isReduced ? 0 : 12 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={isReduced ? { duration: 0.1 } : { duration: 0.25, delay: si * 0.04, ease: 'easeOut' }}
+                          style={{
+                            padding: '20px',
+                            background: 'var(--color-bg-secondary)',
+                            border: '1px solid var(--color-border-default)',
+                            borderRadius: 12,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 12,
+                            position: 'relative',
+                            overflow: 'hidden',
+                            transition: isReduced ? 'none' : 'border-color 200ms, box-shadow 200ms',
+                          }}
+                          whileHover={isReduced ? {} : { borderColor: 'rgba(0,212,255,0.3)', boxShadow: '0 0 0 1px rgba(0,212,255,0.1), 0 8px 32px rgba(0,0,0,0.3)' }}
+                        >
+                          {/* Skill name */}
+                          <div style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 600, color: 'var(--color-text-primary)', lineHeight: 1.2 }}>{skill.name}</div>
+
+                          {/* LED proficiency */}
+                          <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
+                            {Array.from({ length: 5 }).map((_, li) => (
+                              <div
+                                key={li}
+                                style={{
+                                  width: li < skill.proficiency ? 10 : 6,
+                                  height: 6,
+                                  borderRadius: 3,
+                                  background: li < skill.proficiency ? 'var(--color-accent)' : 'var(--color-border-default)',
+                                  boxShadow: li < skill.proficiency ? '0 0 6px var(--color-accent)' : 'none',
+                                  transition: isReduced ? 'none' : 'all 300ms',
+                                }}
+                              />
+                            ))}
+                            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--color-text-tertiary)', marginLeft: 4 }}>{skill.proficiency}/5</span>
+                          </div>
+
+                          {/* Category tag */}
+                          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--color-text-tertiary)', letterSpacing: '0.06em' }}>{cat}.{skill.name.toLowerCase().replace(/\s+/g, '_')}</div>
+
+                          {/* Decorative corner */}
+                          <div style={{ position: 'absolute', top: 0, right: 0, width: 40, height: 40, overflow: 'hidden', opacity: 0.15 }}>
+                            <div style={{ position: 'absolute', top: -20, right: -20, width: 40, height: 40, borderRadius: '50%', background: 'var(--color-accent)' }} />
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Category chips */}
-        <div className="w-full max-w-5xl flex flex-wrap gap-2 mb-10">
-          {SKILL_CATEGORIES.map((cat, idx) => {
-            const isActive = idx === activeCategory;
-            return (
-              <button
-                key={cat}
-                onClick={() => goToCategory(idx as 0 | 1 | 2 | 3)}
-                className={cn(
-                  'px-4 py-1.5 rounded-full text-xs font-mono tracking-wider uppercase',
-                  'border transition-colors duration-150',
-                  isActive
-                    ? 'border-transparent'
-                    : 'border-transparent bg-transparent'
-                )}
-                style={{
-                  background: isActive
-                    ? 'var(--color-accent-dim)'
-                    : 'transparent',
-                  color: isActive
-                    ? 'var(--color-accent)'
-                    : 'var(--color-text-tertiary)',
-                  borderColor: isActive
-                    ? 'transparent'
-                    : 'var(--color-border-subtle)',
-                }}
-                aria-pressed={isActive}
-                aria-label={`Switch to ${CATEGORY_LABELS[cat] ?? cat} skills`}
-              >
-                {CATEGORY_LABELS[cat] ?? cat}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Card deck */}
-        <div
-          className="w-full max-w-5xl"
-          style={{ perspective: '1000px' }}
-        >
-          <div
-            className="relative"
-            style={{
-              height: 320,
-              width: 480,
-              maxWidth: '100%',
-            }}
-            role="region"
-            aria-label="Skills card deck"
-          >
+        {/* Hidden deck for keyboard nav — keep state working */}
+        <div style={{ display: 'none' }} role="region" aria-label="Skills card deck">
             {SKILL_CATEGORIES.map((cat, categoryIndex) => {
               const stackPosition = getStackPosition(categoryIndex);
               const categorySkills = groupedSkills[cat] ?? [];
@@ -585,8 +668,13 @@ return (
           </div>
         </div>
 
-        {/* Navigation arrows (desktop) */}
-        <div className="hidden md:flex items-center gap-6 mt-10">
+        </div>{/* end hidden deck */}
+      </div>
+    </SectionTransition>
+  );
+};
+
+const _UnusedNavArrows: React.FC = () => <div className="hidden md:flex items-center gap-6 mt-10">
           <button
             onClick={() => navigate('left')}
             className="w-10 h-10 flex items-center justify-center rounded-full border transition-colors duration-150"
@@ -656,38 +744,4 @@ return (
           </button>
         </div>
 
-        {/* Mobile position dots */}
-        <div
-          className="flex md:hidden items-center gap-2 mt-8"
-          role="tablist"
-          aria-label="Skill categories"
-        >
-          {SKILL_CATEGORIES.map((cat, idx) => (
-            <button
-              key={cat}
-              role="tab"
-              aria-selected={idx === activeCategory}
-              aria-label={CATEGORY_LABELS[cat] ?? cat}
-              onClick={() => goToCategory(idx as 0 | 1 | 2 | 3)}
-              style={{
-                width: idx === activeCategory ? 24 : 8,
-                height: 8,
-                borderRadius: 4,
-                background:
-                  idx === activeCategory
-                    ? 'var(--color-accent)'
-                    : 'var(--color-border-default)',
-                transition: isReduced
-                  ? 'none'
-                  : 'width 0.2s ease, background 0.2s ease',
-                border: 'none',
-                cursor: 'pointer',
-                padding: 0,
-              }}
-            />
-          ))}
-        </div>
-      </div>
-    </SectionTransition>
-  );
 };

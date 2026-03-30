@@ -696,173 +696,152 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experience
     <SectionTransition id="experience" label="experience.exec()" zIndex={50}>
       <div
         ref={sectionRef}
-        style={{
-          position: 'relative',
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          padding: isMobile ? '96px 16px 48px' : '104px 48px 64px',
-          overflow: 'hidden',
-        }}
+        style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', padding: '104px 48px 80px', overflow: 'hidden' }}
       >
-        {/* ── heading ── */}
-        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <h2
-            style={{
-              fontSize: isMobile ? '24px' : '32px',
-              fontWeight: 600,
-              color: 'var(--color-text-primary)',
-              fontFamily: 'var(--font-display)',
-              display: 'inline-flex',
-              alignItems: 'baseline',
-            }}
-          >
-            <span style={{ fontFamily: 'var(--font-mono)' }}>timeline</span>
-            <motion.span
-              animate={headingParenControls}
-              style={{
-                color: 'var(--color-accent)',
-                fontFamily: 'var(--font-mono)',
-                display: 'inline-block',
-              }}
-            >
-              .exec()
-            </motion.span>
-          </h2>
-          <p
-            style={{
-              marginTop: '8px',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '11px',
-              color: 'var(--color-text-tertiary)',
-              letterSpacing: '0.06em',
-            }}
-          >
-            // {experience.length} entr{experience.length === 1 ? 'y' : 'ies'} — use ← → to navigate
-          </p>
-        </div>
+        <div style={{ maxWidth: 1200, margin: '0 auto', width: '100%', display: 'grid', gridTemplateColumns: '260px 1fr', gap: 64, alignItems: 'start' }}>
 
-        {experience.length === 0 ? (
-          <div
-            style={{
-              flex: 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '13px',
-              color: 'var(--color-text-tertiary)',
-            }}
-          >
-            // no experience entries yet
-          </div>
-        ) : (
-          <div
-            style={{
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '16px',
-              maxWidth: '900px',
-              width: '100%',
-              margin: '0 auto',
-            }}
-          >
-            {/* ── mini-map bar ── */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-              }}
-            >
-              <ExperienceMiniMap
-                items={experience}
-                activeIndex={activeIndex}
-                onSelect={setActiveIndex}
-                isReduced={isReduced}
-              />
+          {/* Left: heading + nav */}
+          <div style={{ position: 'sticky', top: 96 }}>
+            <div style={{ marginBottom: 32 }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--color-text-tertiary)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 8 }}>// section_04</div>
+              <h2 style={{ fontSize: 32, fontWeight: 600, color: 'var(--color-text-primary)', lineHeight: 1.1, marginBottom: 8 }}>
+                <span style={{ fontFamily: 'var(--font-mono)' }}>timeline</span>
+                <motion.span animate={headingParenControls} style={{ color: 'var(--color-accent)', fontFamily: 'var(--font-mono)', display: 'inline-block' }}>.exec()</motion.span>
+              </h2>
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--color-text-tertiary)', letterSpacing: '0.06em' }}>// {experience.length} entr{experience.length === 1 ? 'y' : 'ies'}</p>
             </div>
 
-            {/* ── PCB horizontal wire ── */}
-            <div style={{ padding: '0 4px' }}>
-              <HorizontalPCBWire
-                count={experience.length}
-                activeIndex={activeIndex}
-                isReduced={isReduced}
-              />
+            {/* PCB wire nav */}
+            <div style={{ marginBottom: 24, padding: '0 4px' }}>
+              <HorizontalPCBWire count={experience.length} activeIndex={activeIndex} isReduced={isReduced} />
             </div>
 
-            {/* ── card + nav row ── */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'stretch',
-                gap: '12px',
-                flex: 1,
-                minHeight: isMobile ? '360px' : '320px',
-              }}
-            >
-              <ExpNavArrow
-                direction="prev"
-                onClick={() => setActiveIndex((p) => Math.max(0, p - 1))}
-                disabled={!hasPrev}
-              />
+            {/* Entry list nav */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              {experience.map((exp, i) => {
+                const isAct = i === activeIndex;
+                const typeColor = exp.type === 'work' ? 'var(--color-accent)' : 'var(--color-amber, #e8880a)';
+                const yr = exp.isPresent ? `${getYear(exp.startDate)}–Now` : getYear(exp.startDate);
+                return (
+                  <button
+                    key={exp.id}
+                    type="button"
+                    onClick={() => setActiveIndex(i)}
+                    data-cursor="pointer"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 10,
+                      padding: '10px 14px',
+                      borderRadius: 10,
+                      border: isAct ? `1px solid color-mix(in srgb, ${typeColor} 35%, transparent)` : '1px solid transparent',
+                      background: isAct ? `color-mix(in srgb, ${typeColor} 8%, transparent)` : 'transparent',
+                      cursor: 'pointer',
+                      transition: isReduced ? 'none' : 'all 200ms',
+                      textAlign: 'left',
+                    }}
+                  >
+                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: isAct ? typeColor : 'var(--color-border-strong)', boxShadow: isAct ? `0 0 8px ${typeColor}` : 'none', flexShrink: 0, transition: isReduced ? 'none' : 'all 200ms' }} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: isAct ? 600 : 400, color: isAct ? 'var(--color-text-primary)' : 'var(--color-text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', transition: isReduced ? 'none' : 'color 200ms' }}>{exp.organization}</div>
+                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--color-text-tertiary)', marginTop: 2 }}>{yr}</div>
+                    </div>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: typeColor, background: `color-mix(in srgb, ${typeColor} 10%, transparent)`, border: `1px solid color-mix(in srgb, ${typeColor} 25%, transparent)`, borderRadius: 3, padding: '1px 5px', flexShrink: 0 }}>{exp.type}</span>
+                  </button>
+                );
+              })}
+            </div>
 
-              {/* card area */}
-              <div style={{ flex: 1, position: 'relative', minWidth: 0 }}>
-                <AnimatePresence mode="wait">
-                  {experience[activeIndex] && (
-                    <motion.div
-                      key={experience[activeIndex]!.id}
-                      initial={{ opacity: 0, x: isReduced ? 0 : 24 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: isReduced ? 0 : -24 }}
-                      transition={
-                        isReduced
-                          ? { duration: 0.12 }
-                          : { duration: 0.28, ease: 'easeInOut' }
-                      }
-                      style={{ height: '100%' }}
-                    >
-                      <InlineExperienceNode
-                        experience={experience[activeIndex]!}
-                        index={activeIndex + 1}
-                        isActive
-                        isReduced={isReduced}
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+            {/* Keyboard hint */}
+            <div style={{ marginTop: 24, padding: '12px 14px', background: 'var(--color-bg-secondary)', borderRadius: 8, border: '1px solid var(--color-border-subtle)' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {[['← →', 'navigate'], ['click', 'jump to']].map(([key, desc]) => (
+                  <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--color-accent)', background: 'rgba(0,212,255,0.08)', border: '1px solid rgba(0,212,255,0.2)', borderRadius: 4, padding: '1px 6px', flexShrink: 0 }}>{key}</span>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--color-text-tertiary)' }}>{desc}</span>
+                  </div>
+                ))}
               </div>
-
-              <ExpNavArrow
-                direction="next"
-                onClick={() =>
-                  setActiveIndex((p) => Math.min(experience.length - 1, p + 1))
-                }
-                disabled={!hasNext}
-              />
-            </div>
-
-            {/* ── keyboard hint ── */}
-            <div
-              aria-hidden="true"
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-                gap: '6px',
-                fontFamily: 'var(--font-mono)',
-                fontSize: '10px',
-                color: 'var(--color-text-tertiary)',
-              }}
-            >
-              <span>← →</span>
-              <span>navigate</span>
             </div>
           </div>
-        )}
+
+          {/* Right: active experience card — large and impressive */}
+          <div style={{ minHeight: 480 }}>
+            {experience.length === 0 ? (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 400, fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--color-text-tertiary)' }}>// no experience entries yet</div>
+            ) : (
+              <AnimatePresence mode="wait">
+                {experience[activeIndex] && (() => {
+                  const exp = experience[activeIndex]!;
+                  const typeColor = exp.type === 'work' ? 'var(--color-accent)' : 'var(--color-amber, #e8880a)';
+                  const dateRange = exp.isPresent ? `${getYear(exp.startDate)}–Present` : `${getYear(exp.startDate)}–${exp.endDate ? getYear(exp.endDate) : ''}`;
+                  return (
+                    <motion.div
+                      key={exp.id}
+                      initial={{ opacity: 0, x: isReduced ? 0 : 32 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: isReduced ? 0 : -32 }}
+                      transition={isReduced ? { duration: 0.12 } : { duration: 0.3, ease: 'easeOut' }}
+                      style={{
+                        position: 'relative',
+                        background: 'var(--color-bg-secondary)',
+                        border: `1px solid color-mix(in srgb, ${typeColor} 25%, var(--color-border-default))`,
+                        borderRadius: 16,
+                        overflow: 'hidden',
+                        boxShadow: `0 0 0 1px color-mix(in srgb, ${typeColor} 8%, transparent), 0 32px 80px rgba(0,0,0,0.4)`,
+                      }}
+                    >
+                      {/* Top accent bar */}
+                      <div style={{ height: 3, background: `linear-gradient(to right, ${typeColor}, transparent)`, opacity: 0.8 }} />
+
+                      <div style={{ padding: '40px 40px 36px' }}>
+                        {/* Top metadata row */}
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--color-text-tertiary)', letterSpacing: '0.08em' }}>IC-{(activeIndex + 1).toString().padStart(2, '0')}</span>
+                            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: typeColor, background: `color-mix(in srgb, ${typeColor} 12%, transparent)`, border: `1px solid color-mix(in srgb, ${typeColor} 30%, transparent)`, borderRadius: 4, padding: '2px 8px' }}>{exp.type}</span>
+                          </div>
+                          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--color-text-tertiary)', letterSpacing: '0.04em' }}>{dateRange}</span>
+                        </div>
+
+                        {/* Role + org */}
+                        <div style={{ marginBottom: 32 }}>
+                          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 600, color: 'var(--color-text-primary)', lineHeight: 1.1, marginBottom: 8 }}>{exp.role}</h3>
+                          <p style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 500, color: 'var(--color-text-secondary)' }}>{exp.organization}</p>
+                        </div>
+
+                        {/* Divider */}
+                        <div style={{ height: 1, background: `linear-gradient(to right, color-mix(in srgb, ${typeColor} 30%, transparent), transparent)`, marginBottom: 28 }} />
+
+                        {/* Bullets */}
+                        {exp.description.length > 0 && (
+                          <ul style={{ display: 'flex', flexDirection: 'column', gap: 12, listStyle: 'none', padding: 0, margin: 0 }}>
+                            {exp.description.map((item, bi) => (
+                              <li key={bi} style={{ display: 'flex', gap: 12, fontSize: 15, color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>
+                                <span style={{ color: typeColor, fontSize: 13, lineHeight: '1.8', flexShrink: 0, fontWeight: 600 }} aria-hidden="true">›</span>
+                                <span>{item}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+
+                      {/* Nav arrows inside card footer */}
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 40px 24px', borderTop: '1px solid var(--color-border-subtle)' }}>
+                        <ExpNavArrow direction="prev" onClick={() => setActiveIndex((p) => Math.max(0, p - 1))} disabled={!hasPrev} />
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--color-text-tertiary)' }}>{activeIndex + 1} / {experience.length}</span>
+                        <ExpNavArrow direction="next" onClick={() => setActiveIndex((p) => Math.min(experience.length - 1, p + 1))} disabled={!hasNext} />
+                      </div>
+
+                      {/* Decorative bg element */}
+                      <div aria-hidden="true" style={{ position: 'absolute', top: -40, right: -40, width: 160, height: 160, borderRadius: '50%', background: typeColor, opacity: 0.04, pointerEvents: 'none' }} />
+                    </motion.div>
+                  );
+                })()}
+              </AnimatePresence>
+            )}
+          </div>
+        </div>
       </div>
     </SectionTransition>
   );
