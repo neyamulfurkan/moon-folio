@@ -572,7 +572,7 @@ export default function SettingsForm({ initialSettings }: SettingsFormProps) {
           <FieldGroup label="Profile Photo URL" error={errors['profile_photo_url'] ?? undefined}>
             <TextInput value={values['profile_photo_url'] ?? ''} onChange={(v) => handleChange('profile_photo_url', v)} placeholder="https://res.cloudinary.com/.../photo.jpg" hasError={!!errors['profile_photo_url']} />
             <p className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
-              Shown in the About section alongside Spark.
+              Shown in the About section as a circular profile picture. Use a Cloudinary URL or paste the image URL directly.
             </p>
           </FieldGroup>
         </div>
@@ -580,7 +580,7 @@ export default function SettingsForm({ initialSettings }: SettingsFormProps) {
 
       {/* Availability */}
       <section>
-        <SectionHeader title="Availability" index={7} />
+        <SectionHeader title="Availability" index={6} />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FieldGroup label="Status" error={errors['availability_status'] ?? undefined}>
             <select
@@ -602,7 +602,7 @@ export default function SettingsForm({ initialSettings }: SettingsFormProps) {
 
       {/* Testimonials */}
       <section>
-        <SectionHeader title="Testimonials" index={8} />
+        <SectionHeader title="Testimonials" index={7} />
         <div className="flex flex-col gap-6">
           {([1, 2, 3] as const).map((i) => (
             <div key={i} className="flex flex-col gap-4 p-4 rounded-lg" style={{ border: '1px solid var(--color-border-default)', background: 'var(--color-bg-secondary)' }}>
