@@ -660,9 +660,331 @@ const ProjectsMiniMap: React.FC<ProjectsMiniMapProps> = ({
 
 // ── ProjectsSection ─────────────────────────────────────────────────────────
 
+const MobileProjectsView: React.FC<{
+  projects: ProjectSummary[];
+  onViewDetails: (project: ProjectSummary) => void;
+  isReduced: boolean;
+}> = ({ projects, onViewDetails, isReduced }) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    const cards = Array.from(container.children) as HTMLElement[];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+            const idx = cards.indexOf(entry.target as HTMLElement);
+            if (idx !== -1) setActiveIndex(idx);
+          }
+        });
+      },
+      { root: container, threshold: 0.6 }
+    );
+    cards.forEach((card) => observer.observe(card));
+    return () => observer.disconnect();
+  }, [projects]);
+
+  return (
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', paddingTop: 64 }}>
+      {/* Scroll container */}
+      <div
+        ref={scrollRef}
+        style={{
+          flex: 1,
+          display: 'flex',
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          scrollSnapType: 'x mandatory',
+          scrollBehavior: isReduced ? 'auto' : 'smooth',
+          WebkitOverflowScrolling: 'touch',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          alignItems: 'center',
+          gap: 0,
+          paddingBottom: 0,
+        }}
+      >
+        <style>{`.mobile-snap-container::-webkit-scrollbar { display: none; }`}</style>
+        {projects.map((project, i) => (
+          <MobileProjectCard
+            key={project.id}
+            project={project}
+            isActive={activeIndex === i}
+            index={i}
+            total={projects.length}
+            onViewDetails={() => onViewDetails(project)}
+            isReduced={isReduced}
+          />
+        ))}
+      </div>
+
+      {/* Dots */}
+      {projects.length > 1 && (
+        <div
+          aria-hidden="true"
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 8,
+            paddingBottom: 24,
+            paddingTop: 12,
+          }}
+        >
+          {projects.map((_, i) => (
+            <div
+              key={i}
+              onClick={() => {
+                const container = scrollRef.current;
+                if (!container) return;
+                const card = container.children[i] as HTMLElement;
+                card?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+              }}
+              style={{
+                width: activeIndex === i ? 20 : 6,
+                height: 6,
+                borderRadius: 3,
+                background: activeIndex === i ? 'var(--color-accent)' : 'var(--color-border-strong)',
+                transition: isReduced ? 'none' : 'all 300ms cubic-bezier(0.4,0,0.2,1)',
+                cursor: 'pointer',
+                boxShadow: activeIndex === i ? '0 0 8px var(--color-accent)' : 'none',
+              }}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const MobileProjectCard: React.FC<{
+  project: ProjectSummary;
+  isActive: boolean;
+  index: number;
+  total: number;
+  onViewDetails: () => void;
+  isReduced: boolean;
+}> = ({ project, isActive, index, total, onViewDetails, isReduced }) => {
+  const cloudinaryUrl = project.thumbnailUrl
+    ? project.thumbnailUrl.includes('res.cloudinary.com')
+      ? project.thumbnailUrl.replace('/upload/', '/upload/w_800,h_600,c_fill,f_auto,q_auto/')
+      : project.thumbnailUrl
+    : null;
+
+  return (
+    <div
+      style={{
+        scrollSnapAlign: 'center',
+        flexShrink: 0,
+        width: 'calc(100vw - 48px)',
+        marginLeft: index === 0 ? '24px' : '12px',
+        marginRight: index === total - 1 ? '24px' : '12px',
+        height: 'calc(100% - 16px)',
+        maxHeight: 560,
+        borderRadius: 20,
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        background: 'var(--color-bg-secondary)',
+        border: isActive
+          ? '1px solid rgba(0,212,255,0.35)'
+          : '1px solid var(--color-border-default)',
+        boxShadow: isActive
+          ? '0 0 0 1px rgba(0,212,255,0.1), 0 24px 64px rgba(0,0,0,0.7)'
+          : '0 8px 32px rgba(0,0,0,0.4)',
+        transform: isActive ? 'scale(1)' : 'scale(0.94)',
+        transition: isReduced ? 'none' : 'transform 400ms cubic-bezier(0.4,0,0.2,1), box-shadow 400ms, border-color 400ms',
+        willChange: 'transform',
+      }}
+    >
+      {/* Image */}
+      <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', flexShrink: 0 }}>
+        {cloudinaryUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={cloudinaryUrl}
+            alt={project.title}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            loading={index === 0 ? 'eager' : 'lazy'}
+          />
+        ) : (
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              background: 'linear-gradient(135deg, var(--color-bg-tertiary) 0%, var(--color-bg-primary) 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--color-text-tertiary)' }}>no preview</span>
+          </div>
+        )}
+        {/* Badges */}
+        <div style={{ position: 'absolute', top: 12, left: 12, display: 'flex', gap: 6 }}>
+          <span
+            style={{
+              background: 'rgba(7,9,15,0.8)',
+              backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(0,212,255,0.25)',
+              borderRadius: 6,
+              padding: '3px 8px',
+              fontFamily: 'var(--font-mono)',
+              fontSize: 10,
+              color: 'var(--color-accent)',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+            }}
+          >
+            {project.category}
+          </span>
+          {project.featured && (
+            <span
+              style={{
+                background: 'rgba(0,212,255,0.12)',
+                backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(0,212,255,0.3)',
+                borderRadius: 6,
+                padding: '3px 8px',
+                fontFamily: 'var(--font-mono)',
+                fontSize: 10,
+                color: 'var(--color-accent)',
+              }}
+            >
+              ★
+            </span>
+          )}
+        </div>
+        {/* Counter */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 12,
+            right: 12,
+            background: 'rgba(7,9,15,0.7)',
+            backdropFilter: 'blur(6px)',
+            borderRadius: 6,
+            padding: '3px 8px',
+            fontFamily: 'var(--font-mono)',
+            fontSize: 10,
+            color: 'var(--color-text-tertiary)',
+          }}
+        >
+          {index + 1}/{total}
+        </div>
+        {/* Cyan line */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 2,
+            background: 'linear-gradient(to right, transparent, var(--color-accent), transparent)',
+            opacity: isActive ? 0.8 : 0.2,
+            transition: isReduced ? 'none' : 'opacity 400ms',
+          }}
+        />
+      </div>
+
+      {/* Info */}
+      <div style={{ flex: 1, padding: '18px 20px 20px', display: 'flex', flexDirection: 'column', gap: 10, overflow: 'hidden' }}>
+        <h2
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(17px, 4.5vw, 21px)',
+            fontWeight: 600,
+            color: 'var(--color-text-primary)',
+            lineHeight: 1.2,
+            margin: 0,
+          }}
+        >
+          {project.title}
+        </h2>
+        {project.shortDesc && (
+          <p
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 13,
+              color: 'var(--color-text-secondary)',
+              lineHeight: 1.55,
+              margin: 0,
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+            }}
+          >
+            {project.shortDesc}
+          </p>
+        )}
+        {/* Tech chips */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+          {project.techStack.slice(0, 4).map((tech) => (
+            <span
+              key={tech}
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 10,
+                background: 'var(--color-bg-tertiary)',
+                color: 'var(--color-text-secondary)',
+                borderRadius: 4,
+                padding: '2px 6px',
+                border: '1px solid var(--color-border-subtle)',
+              }}
+            >
+              {tech}
+            </span>
+          ))}
+          {project.techStack.length > 4 && (
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--color-text-tertiary)', padding: '2px 4px' }}>
+              +{project.techStack.length - 4}
+            </span>
+          )}
+        </div>
+        {/* CTA */}
+        <div style={{ marginTop: 'auto', paddingTop: 8 }}>
+          <button
+            type="button"
+            onClick={onViewDetails}
+            data-cursor="pointer"
+            style={{
+              width: '100%',
+              padding: '13px 0',
+              background: 'var(--color-accent)',
+              color: 'var(--color-bg-primary)',
+              border: 'none',
+              borderRadius: 10,
+              fontFamily: 'var(--font-display)',
+              fontSize: 14,
+              fontWeight: 600,
+              cursor: 'pointer',
+              letterSpacing: '0.01em',
+            }}
+          >
+            View Details
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects, onOverlayOpen, externalOverlayProject }) => {
   const isReduced = useReducedMotion();
+  const [isMobile, setIsMobile] = useState(false);
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
+
+  useEffect(() => {
+    const check = (): void => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
   const [overlayProject, setOverlayProject] = useState<Project | null>(null);
   const [hairSpike, setHairSpike] = useState(false);
   const [overlayLoading, setOverlayLoading] = useState(false);
@@ -831,6 +1153,24 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects, onOv
             // projects coming soon
           </p>
         </div>
+      </SectionTransition>
+    );
+  }
+
+  if (isMobile) {
+    return (
+      <SectionTransition id="projects" label="projects" zIndex={40}>
+        <MobileProjectsView
+          projects={projects}
+          onViewDetails={(project) => { void handleViewDetails(project); }}
+          isReduced={isReduced}
+        />
+        {onOverlayOpen === undefined && (
+          <ProjectDetailOverlay
+            project={effectiveOverlayProject ?? null}
+            onClose={handleCloseOverlay}
+          />
+        )}
       </SectionTransition>
     );
   }
