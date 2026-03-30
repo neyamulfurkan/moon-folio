@@ -61,6 +61,16 @@ const useCounterAnimation = (
     [target, duration]
   );
 
+  useEffect(() => {
+    if (isReduced) {
+      setCurrent(target);
+      setDone(true);
+      return;
+    }
+    if (target === 0) return;
+    animate(performance.now());
+  }, [target, isReduced, animate]);
+
   return { current: isReduced ? target : current, done: isReduced ? true : done };
 };
 
@@ -71,7 +81,7 @@ type SingleCounterProps = {
 };
 
 const SingleCounter: React.FC<SingleCounterProps> = ({ stat, shouldStart, isReduced }) => {
-  const [started, setStarted] = useState(false);
+  const [started, setStarted] = useState(isReduced);
   const [showSuffix, setShowSuffix] = useState(false);
   const hasRunRef = useRef(false);
 
@@ -87,6 +97,13 @@ const SingleCounter: React.FC<SingleCounterProps> = ({ stat, shouldStart, isRedu
     1200,
     isReduced
   );
+
+  useEffect(() => {
+    if (isReduced && !hasRunRef.current) {
+      hasRunRef.current = true;
+      setStarted(true);
+    }
+  }, [isReduced]);
 
   useEffect(() => {
     if (done && !showSuffix) {
