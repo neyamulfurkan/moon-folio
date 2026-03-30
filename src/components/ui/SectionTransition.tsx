@@ -126,9 +126,6 @@ export const SectionTransition: React.FC<SectionTransitionProps> = ({
           </span>
         </div>
 
-        {/* Ambient weather background */}
-        <AmbientBackground />
-
         {/* Section content */}
         <div style={{ position: 'relative', zIndex: 1 }}>{children}</div>
       </section>

@@ -17,7 +17,7 @@ type HeroSectionProps = {
   cvUrl: string;
 };
 
-const CHAR_REVEAL_SPEED_MS = 15;
+const CHAR_REVEAL_SPEED_MS = 30;
 
 const useTypewriterReveal = (
   text: string,
@@ -321,9 +321,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ scenes, cvUrl }) => {
             overflow: 'hidden',
           }}
         >
-          <div style={{ position: 'relative', width: '380px', height: '412px', flexShrink: 0, zIndex: 1 }}>
-            {/* Invisible hitbox so chat still opens from hero */}
-            <SparkCharacter onChatOpen={openChat} size="hero" showChat={true} onShockReady={(fn) => { sparkShockRef.current = fn; }} className="opacity-0 pointer-events-auto" />
+                 <div style={{ position: 'relative', width: '380px', height: '412px', flexShrink: 0, zIndex: 1 }}>
+            {/* Space reserved — SparkCharacter rendered by FloatingSparkIsland */}
           </div>
         </div>
       </div>

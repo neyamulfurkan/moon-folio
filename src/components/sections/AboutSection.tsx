@@ -38,28 +38,8 @@ const useCounterAnimation = (
   duration: number,
   isReduced: boolean
 ): { current: number; done: boolean } => {
-  const [current, setCurrent] = useState(0);
-  const [done, setDone] = useState(false);
-
-  const animate = useCallback(
-    (startTime: number) => {
-      const step = (now: number) => {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = easeOutQuad(progress);
-        setCurrent(Math.round(eased * target));
-
-        if (progress < 1) {
-          requestAnimationFrame(step);
-        } else {
-          setCurrent(target);
-          setDone(true);
-        }
-      };
-      requestAnimationFrame(step);
-    },
-    [target, duration]
-  );
+  const [current, setCurrent] = useState(isReduced ? target : 0);
+  const [done, setDone] = useState(isReduced);
 
   useEffect(() => {
     if (isReduced) {
@@ -68,10 +48,28 @@ const useCounterAnimation = (
       return;
     }
     if (target === 0) return;
-    animate(performance.now());
-  }, [target, isReduced, animate]);
 
-  return { current: isReduced ? target : current, done: isReduced ? true : done };
+    const startTime = performance.now();
+    let rafId: number;
+
+    const step = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = easeOutQuad(progress);
+      setCurrent(Math.round(eased * target));
+      if (progress < 1) {
+        rafId = requestAnimationFrame(step);
+      } else {
+        setCurrent(target);
+        setDone(true);
+      }
+    };
+
+    rafId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafId);
+  }, [target, duration, isReduced]);
+
+  return { current, done };
 };
 
 type SingleCounterProps = {
@@ -237,6 +235,21 @@ const HeadingWithCursor: React.FC<{ triggered: boolean; isReduced: boolean }> = 
 };
 
 const CircuitSchematic: React.FC<{ isReduced: boolean }> = ({ isReduced }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<SVGSVGElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry?.isIntersecting) setIsVisible(true); },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const shouldAnimate = isVisible && !isReduced;
   // PCB traces: right-angle only
   // Trace 1: horizontal from left to center, then up to MCU
   const trace1 = 'M 30 160 L 160 160 L 160 80';
@@ -250,11 +263,12 @@ const CircuitSchematic: React.FC<{ isReduced: boolean }> = ({ isReduced }) => {
 
   return (
     <motion.svg
+      ref={ref}
       viewBox="0 0 480 280"
       xmlns="http://www.w3.org/2000/svg"
       style={{ width: '100%', maxWidth: '440px' }}
       initial={{ opacity: 0.2 }}
-      animate={isReduced ? { opacity: 0.2 } : { opacity: [0.2, 0.35, 0.2] }}
+      animate={shouldAnimate ? { opacity: [0.2, 0.35, 0.2] } : { opacity: 0.2 }}
       transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
       aria-hidden="true"
     >
@@ -342,7 +356,7 @@ const CircuitSchematic: React.FC<{ isReduced: boolean }> = ({ isReduced }) => {
       ))}
 
       {/* Pulse dots on traces — using inline style with CSS animation */}
-      {!isReduced && (
+      {shouldAnimate && (
         <>
           <circle r="3" fill="var(--color-accent)">
             <animateMotion dur="2s" repeatCount="indefinite" begin="0s">

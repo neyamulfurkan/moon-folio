@@ -703,7 +703,6 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experience
           {/* Left: heading + nav */}
           <div style={{ position: 'sticky', top: 96 }}>
             <div style={{ marginBottom: 32 }}>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--color-text-tertiary)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 8 }}>// section_04</div>
               <h2 style={{ fontSize: 32, fontWeight: 600, color: 'var(--color-text-primary)', lineHeight: 1.1, marginBottom: 8 }}>
                 <span style={{ fontFamily: 'var(--font-mono)' }}>timeline</span>
                 <motion.span animate={headingParenControls} style={{ color: 'var(--color-accent)', fontFamily: 'var(--font-mono)', display: 'inline-block' }}>.exec()</motion.span>

@@ -361,7 +361,6 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
           <div style={{ position: 'sticky', top: 96 }}>
             <div style={{ marginBottom: 40 }}>
               <h2 style={{ fontSize: 36, fontWeight: 600, color: 'var(--color-text-primary)', lineHeight: 1.1, marginBottom: 8 }}>
-                <span style={{ fontFamily: 'var(--font-mono)', display: 'block', fontSize: 12, color: 'var(--color-text-tertiary)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 8 }}>// section_03</span>
                 <span style={{ fontFamily: 'var(--font-mono)' }}>skills</span>
                 <span style={{ color: 'var(--color-accent)', fontFamily: 'var(--font-mono)' }}>.deck()</span>
               </h2>
