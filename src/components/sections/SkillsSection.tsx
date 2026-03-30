@@ -509,9 +509,15 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
           </div>
         </div>
 
-        {/* Hidden deck for keyboard nav — keep state working */}
-        <div style={{ display: 'none' }} role="region" aria-label="Skills card deck">
-            {SKILL_CATEGORIES.map((cat, categoryIndex) => {
+      </div>
+    </SectionTransition>
+  );
+};
+
+// Unused legacy deck kept for reference only
+const _UnusedDeck: React.FC<{ groupedSkills: Record<string, Skill[]>; getStackPosition: (i: number) => 0|1|2|3; navigate: (d: 'left'|'right') => void; activeCategory: number; isReduced: boolean }> = ({ groupedSkills, getStackPosition, navigate, activeCategory, isReduced }) => (
+  <div style={{ display: 'none' }}>
+    {SKILL_CATEGORIES.map((cat, categoryIndex) => {
               const stackPosition = getStackPosition(categoryIndex);
               const categorySkills = groupedSkills[cat] ?? [];
               const visibleSkills = categorySkills.slice(0, MAX_SKILLS_PER_CARD);
@@ -666,83 +672,6 @@ return (
                 </div>
               );
             })}
-          </div>
-        </div>
+  </div>
+);
 
-        </div>
-      </div>
-    </SectionTransition>
-  );
-};
-
-const _UnusedNavArrows: React.FC = () => <div className="hidden md:flex items-center gap-6 mt-10">
-          <button
-            onClick={() => navigate('left')}
-            className="w-10 h-10 flex items-center justify-center rounded-full border transition-colors duration-150"
-            style={{
-              borderColor: 'var(--color-border-default)',
-              color: 'var(--color-text-secondary)',
-            }}
-            aria-label="Previous skill category"
-          >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path
-                d="M10 3L5 8L10 13"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-
-          {/* Position dots */}
-          <div className="flex items-center gap-2" role="tablist" aria-label="Skill categories">
-            {SKILL_CATEGORIES.map((cat, idx) => (
-              <button
-                key={cat}
-                role="tab"
-                aria-selected={idx === activeCategory}
-                aria-label={CATEGORY_LABELS[cat] ?? cat}
-                onClick={() => goToCategory(idx as 0 | 1 | 2 | 3)}
-                style={{
-                  width: idx === activeCategory ? 24 : 8,
-                  height: 8,
-                  borderRadius: 4,
-                  background:
-                    idx === activeCategory
-                      ? 'var(--color-accent)'
-                      : 'var(--color-border-default)',
-                  transition: isReduced
-                    ? 'none'
-                    : 'width 0.2s ease, background 0.2s ease',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: 0,
-                }}
-              />
-            ))}
-          </div>
-
-          <button
-            onClick={() => navigate('right')}
-            className="w-10 h-10 flex items-center justify-center rounded-full border transition-colors duration-150"
-            style={{
-              borderColor: 'var(--color-border-default)',
-              color: 'var(--color-text-secondary)',
-            }}
-            aria-label="Next skill category"
-          >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path
-                d="M6 3L11 8L6 13"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-        </div>
-
-};
