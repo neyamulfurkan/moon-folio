@@ -155,14 +155,14 @@ body {
   border-radius: 2px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   body {
     cursor: auto;
   }
 }
 
 /* Mobile project card improvements */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   [data-section="projects"] .project-info-col {
     left: 16px !important;
     right: 16px !important;

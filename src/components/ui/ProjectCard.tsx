@@ -17,7 +17,7 @@ const MAX_CHIPS = 3;
 
 const isMobileDevice = (): boolean => {
   if (typeof window === 'undefined') return false;
-  return window.innerWidth < 768;
+  return window.innerWidth < 1024;
 };
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({
@@ -71,7 +71,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   }, []);
 
   useEffect(() => {
-    const check = (): void => setIsMobile(window.innerWidth < 768);
+    const check = (): void => setIsMobile(window.innerWidth < 1024);
     check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);

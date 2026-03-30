@@ -1035,7 +1035,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects, onOv
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
 
   useEffect(() => {
-    const check = (): void => setIsMobile(window.innerWidth < 768);
+    const check = (): void => setIsMobile(window.innerWidth < 1024);
     check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
@@ -1239,7 +1239,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects, onOv
       data-section="projects"
       >
       <style>{`
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
           .projects-section-root .nav-arrow-btn { display: none !important; }
           .projects-section-root .keyboard-hint { display: none !important; }
         }

@@ -628,14 +628,14 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experience
   const isVisibleRef = useRef(false);
 
   useEffect(() => {
-    const check = (): void => setIsMobile(window.innerWidth < 768);
+    const check = (): void => setIsMobile(window.innerWidth < 1024);
     check();
     window.addEventListener('resize', check, { passive: true });
     return () => window.removeEventListener('resize', check);
   }, []);
 
   useEffect(() => {
-    const check = (): void => setIsMobile(window.innerWidth < 640);
+    const check = (): void => setIsMobile(window.innerWidth < 1024);
     check();
     window.addEventListener('resize', check, { passive: true });
     return () => window.removeEventListener('resize', check);
