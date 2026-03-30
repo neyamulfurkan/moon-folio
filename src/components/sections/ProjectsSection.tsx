@@ -113,7 +113,8 @@ const NavArrow: React.FC<NavArrowProps> = ({ direction, onClick, disabled }) => 
     onClick={onClick}
     disabled={disabled}
     data-cursor="pointer"
-    style={{
+    className="nav-arrow-btn"
+  style={{
       position: 'absolute',
       top: '50%',
       transform: 'translateY(-50%)',
@@ -839,8 +840,15 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects, onOv
       <div
         ref={sectionRef}
         style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden', paddingTop: '64px' }}
+        className="projects-section-root"
       data-section="projects"
       >
+      <style>{`
+        @media (max-width: 768px) {
+          .projects-section-root .nav-arrow-btn { display: none !important; }
+          .projects-section-root .keyboard-hint { display: none !important; }
+        }
+      `}</style>
         {/* Spark hair watermark — hidden when overlay is open */}
         {!overlayProject && <SparkHairWatermark spike={hairSpike} isReduced={isReduced} />}
 
@@ -954,6 +962,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects, onOv
         {hasMultiple && (
           <div
             aria-hidden="true"
+            className="keyboard-hint"
             style={{
               position: 'absolute',
               bottom: 32,
