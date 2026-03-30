@@ -567,7 +567,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           </div>
         </div>
         </>
-      )} {/* end mobile/desktop conditional */
+      )} {/* end mobile/desktop conditional */}
 
       {/* Mini-shock flash overlay */}
       {flashVisible && (

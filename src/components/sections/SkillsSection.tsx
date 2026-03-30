@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 import { SectionTransition } from '@/components/ui/SectionTransition';
 import { SkillCard } from '@/components/ui/SkillCard';
 import { SKILL_CATEGORIES } from '@/lib/constants';
@@ -213,7 +214,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const check = (): void => setIsMobile(window.innerWidth < 768);
+    const check = (): void => setIsMobile(window.innerWidth < 1024);
     check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
@@ -668,7 +669,7 @@ return (
           </div>
         </div>
 
-        </div>{/* end hidden deck */}
+        </div>
       </div>
     </SectionTransition>
   );
