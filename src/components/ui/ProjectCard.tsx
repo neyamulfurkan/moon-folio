@@ -323,6 +323,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           </div>
         </div>
       ) : (
+        <>
       {/* Background image or fallback */}
       {cloudinaryUrl ? (
         <Image
@@ -481,6 +482,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         </div>
       </div>
 
+        </>
       )} {/* end mobile/desktop conditional */}
 
       {/* Mini-shock flash overlay */}
