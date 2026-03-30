@@ -3,8 +3,6 @@
 import { useEffect, useRef } from 'react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { cn } from '@/lib/utils';
-import { AmbientBackground } from '@/components/ui/AmbientBackground';
-
 type SectionTransitionProps = {
   children: React.ReactNode;
   id: string;
@@ -85,7 +83,7 @@ export const SectionTransition: React.FC<SectionTransitionProps> = ({
           position: 'sticky',
           top: 0,
           zIndex,
-          overflow: 'clip',
+          overflow: 'hidden',
           height: '100vh',
           scrollSnapAlign: 'start',
           backgroundColor:
