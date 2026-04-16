@@ -56,13 +56,13 @@ export const HERO_SCENES_DEFAULT: readonly HeroScene[] = [
     headline: "From circuits to cloud deploys.",
     supporting:
       "Hardware that talks to software. APIs that talk to microcontrollers. I like the whole stack.",
-    accentColor: "#b87333",
+    accentColor: "#e8880a",
   },
   {
     eyebrow: "Next.js · TypeScript · PostgreSQL · KiCad",
     headline: "Production code. Not just portfolio code.",
     supporting:
       "Real projects, real users, real constraints. Ask Spark about any of them.",
-    accentColor: "#ffe535",
+    accentColor: "#22c55e",
   },
 ] as const;
