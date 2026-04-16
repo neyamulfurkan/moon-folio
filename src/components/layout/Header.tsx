@@ -192,160 +192,46 @@ export const Header: React.FC<HeaderProps> = ({ cvUrl, githubUrl }) => {
       <header
         role="banner"
         className={cn(
-          'overflow-hidden',
           isScrolled ? 'header-scrolled' : '',
-          'fixed top-0 left-0 right-0 h-16',
-          'flex items-center justify-between px-6',
-          'transition-[background-color,border-color]',
+          'fixed top-3 left-1/2 -translate-x-1/2',
+          'w-[calc(100%-24px)] max-w-5xl',
+          'h-14',
+          'flex items-center justify-between px-5',
+          'transition-[box-shadow,background-color]',
           isReduced ? 'duration-0' : 'duration-300',
-          'border-b border-[rgba(0,212,255,0.15)]',
+          'rounded-2xl',
           'z-[150]'
         )}
         style={{
           zIndex: 150,
-          backgroundColor: 'rgba(8, 12, 22, 0.92)',
-          backdropFilter: 'blur(20px) saturate(130%)',
-          WebkitBackdropFilter: 'blur(20px) saturate(130%)',
-          backgroundImage: [
-            'radial-gradient(ellipse 140% 100% at 15% -40%, rgba(20, 50, 80, 0.55) 0%, transparent 55%)',
-            'radial-gradient(ellipse 120% 80% at 85% -30%, rgba(15, 40, 65, 0.45) 0%, transparent 55%)',
-            'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 180, 255, 0.07) 0%, transparent 65%)',
-            'linear-gradient(180deg, rgba(10, 18, 35, 0.6) 0%, rgba(7, 9, 15, 0.4) 100%)',
+          backgroundColor: 'rgba(8, 12, 22, 0.82)',
+          backdropFilter: 'blur(24px) saturate(140%)',
+          WebkitBackdropFilter: 'blur(24px) saturate(140%)',
+          border: '1px solid rgba(0, 212, 255, 0.10)',
+          boxShadow: [
+            '0 0 0 1px rgba(0, 212, 255, 0.06)',
+            '0 2px 16px rgba(0, 0, 0, 0.55)',
+            '0 0 40px rgba(0, 120, 200, 0.08)',
           ].join(', '),
-          boxShadow: '0 1px 0 rgba(0, 212, 255, 0.15), 0 4px 32px rgba(0, 0, 0, 0.6)',
         } as React.CSSProperties}
       >
-        {/* Animated rain + clouds */}
 
-        {/* Clouds + rain together — rain only falls from cloud positions */}
-        <svg
+
+
+        {/* Cloud shimmer — lightweight CSS only, no SVG rain */}
+        <span
           aria-hidden="true"
           style={{
             position: 'absolute',
             inset: 0,
-            width: '100%',
-            height: '100%',
+            borderRadius: 'inherit',
             pointerEvents: 'none',
-            overflow: 'hidden',
+            background: [
+              'radial-gradient(ellipse 60% 80% at 15% 50%, rgba(0, 130, 200, 0.07) 0%, transparent 70%)',
+              'radial-gradient(ellipse 50% 80% at 85% 50%, rgba(0, 100, 180, 0.05) 0%, transparent 70%)',
+            ].join(', '),
           }}
-          viewBox="0 0 1800 64"
-          preserveAspectRatio="xMinYMin slice"
-        >
-          <defs>
-            <filter id="hdr-blur"><feGaussianBlur stdDeviation="7"/></filter>
-          </defs>
-
-          {/* Layer 1 — drifts right over 40s. Clouds at cx 150,420,700,950,1200,1500,1750 */}
-          <g>
-            <animateTransform attributeName="transform" type="translate" from="-900 0" to="0 0" dur="40s" repeatCount="indefinite"/>
-            {/* Clouds */}
-            <ellipse cx="150"  cy="8"  rx="150" ry="22" fill="#1e4060" opacity="0.65" filter="url(#hdr-blur)"/>
-            <ellipse cx="420"  cy="5"  rx="170" ry="24" fill="#17344d" opacity="0.60" filter="url(#hdr-blur)"/>
-            <ellipse cx="700"  cy="12" rx="140" ry="20" fill="#1c3d5a" opacity="0.58" filter="url(#hdr-blur)"/>
-            <ellipse cx="950"  cy="4"  rx="130" ry="19" fill="#193550" opacity="0.62" filter="url(#hdr-blur)"/>
-            <ellipse cx="1200" cy="10" rx="160" ry="22" fill="#1a3855" opacity="0.55" filter="url(#hdr-blur)"/>
-            <ellipse cx="1500" cy="6"  rx="140" ry="20" fill="#1e4060" opacity="0.60" filter="url(#hdr-blur)"/>
-            <ellipse cx="1750" cy="14" rx="120" ry="18" fill="#17344d" opacity="0.52" filter="url(#hdr-blur)"/>
-            {/* Rain under cloud at cx~150 (x: 80–220) */}
-            {[88,105,122,139,156,173,190,207].map((x,i) => (
-              <line key={`r1a${i}`} x1={x} x2={x-1} stroke="#bfdbfe" strokeWidth="0.5" strokeLinecap="round" opacity={0.13+((i*3)%7)*0.01}>
-                <animate attributeName="y1" from={-8-(i%5)*5} to={72} dur={`${0.9+(i%4)*0.14}s`} begin={`${(i*0.19)%1.8}s`} repeatCount="indefinite"/>
-                <animate attributeName="y2" from={-8-(i%5)*5+6} to={78} dur={`${0.9+(i%4)*0.14}s`} begin={`${(i*0.19)%1.8}s`} repeatCount="indefinite"/>
-              </line>
-            ))}
-            {/* Rain under cloud at cx~420 (x: 310–530) */}
-            {[318,338,358,378,398,418,438,458,478,498,518].map((x,i) => (
-              <line key={`r1b${i}`} x1={x} x2={x-1} stroke="#bfdbfe" strokeWidth="0.5" strokeLinecap="round" opacity={0.13+((i*5)%6)*0.01}>
-                <animate attributeName="y1" from={-10-(i%6)*4} to={72} dur={`${0.85+(i%5)*0.13}s`} begin={`${(i*0.17)%1.6}s`} repeatCount="indefinite"/>
-                <animate attributeName="y2" from={-10-(i%6)*4+6} to={78} dur={`${0.85+(i%5)*0.13}s`} begin={`${(i*0.17)%1.6}s`} repeatCount="indefinite"/>
-              </line>
-            ))}
-            {/* Rain under cloud at cx~700 (x: 590–810) */}
-            {[598,618,638,658,678,698,718,738,758,778,798].map((x,i) => (
-              <line key={`r1c${i}`} x1={x} x2={x-1} stroke="#bfdbfe" strokeWidth="0.5" strokeLinecap="round" opacity={0.12+((i*4)%7)*0.01}>
-                <animate attributeName="y1" from={-6-(i%5)*5} to={72} dur={`${0.9+(i%4)*0.15}s`} begin={`${(i*0.21)%1.9}s`} repeatCount="indefinite"/>
-                <animate attributeName="y2" from={-6-(i%5)*5+6} to={78} dur={`${0.9+(i%4)*0.15}s`} begin={`${(i*0.21)%1.9}s`} repeatCount="indefinite"/>
-              </line>
-            ))}
-            {/* Rain under cloud at cx~950 (x: 855–1045) */}
-            {[862,882,902,922,942,962,982,1002,1022,1038].map((x,i) => (
-              <line key={`r1d${i}`} x1={x} x2={x-1} stroke="#bfdbfe" strokeWidth="0.5" strokeLinecap="round" opacity={0.13+((i*3)%6)*0.01}>
-                <animate attributeName="y1" from={-8-(i%5)*4} to={72} dur={`${0.88+(i%4)*0.13}s`} begin={`${(i*0.18)%1.7}s`} repeatCount="indefinite"/>
-                <animate attributeName="y2" from={-8-(i%5)*4+6} to={78} dur={`${0.88+(i%4)*0.13}s`} begin={`${(i*0.18)%1.7}s`} repeatCount="indefinite"/>
-              </line>
-            ))}
-            {/* Rain under cloud at cx~1200 (x: 1080–1320) */}
-            {[1088,1110,1132,1154,1176,1198,1220,1242,1264,1286,1308].map((x,i) => (
-              <line key={`r1e${i}`} x1={x} x2={x-1} stroke="#bfdbfe" strokeWidth="0.5" strokeLinecap="round" opacity={0.12+((i*4)%7)*0.01}>
-                <animate attributeName="y1" from={-9-(i%6)*4} to={72} dur={`${0.92+(i%5)*0.12}s`} begin={`${(i*0.20)%1.8}s`} repeatCount="indefinite"/>
-                <animate attributeName="y2" from={-9-(i%6)*4+6} to={78} dur={`${0.92+(i%5)*0.12}s`} begin={`${(i*0.20)%1.8}s`} repeatCount="indefinite"/>
-              </line>
-            ))}
-            {/* Rain under cloud at cx~1500 (x: 1395–1605) */}
-            {[1402,1422,1442,1462,1482,1502,1522,1542,1562,1582].map((x,i) => (
-              <line key={`r1f${i}`} x1={x} x2={x-1} stroke="#bfdbfe" strokeWidth="0.5" strokeLinecap="round" opacity={0.13+((i*3)%6)*0.01}>
-                <animate attributeName="y1" from={-7-(i%5)*5} to={72} dur={`${0.87+(i%4)*0.14}s`} begin={`${(i*0.16)%1.6}s`} repeatCount="indefinite"/>
-                <animate attributeName="y2" from={-7-(i%5)*5+6} to={78} dur={`${0.87+(i%4)*0.14}s`} begin={`${(i*0.16)%1.6}s`} repeatCount="indefinite"/>
-              </line>
-            ))}
-          </g>
-
-          {/* Layer 2 — drifts left over 55s. Clouds at cx 250,550,850,1100,1400,1650 */}
-          <g>
-            <animateTransform attributeName="transform" type="translate" from="0 0" to="-900 0" dur="55s" repeatCount="indefinite"/>
-            {/* Clouds */}
-            <ellipse cx="250"  cy="14" rx="120" ry="16" fill="#162e45" opacity="0.45" filter="url(#hdr-blur)"/>
-            <ellipse cx="550"  cy="8"  rx="180" ry="20" fill="#1b3a55" opacity="0.42" filter="url(#hdr-blur)"/>
-            <ellipse cx="850"  cy="16" rx="130" ry="18" fill="#193050" opacity="0.48" filter="url(#hdr-blur)"/>
-            <ellipse cx="1100" cy="6"  rx="150" ry="22" fill="#1c3d5a" opacity="0.44" filter="url(#hdr-blur)"/>
-            <ellipse cx="1400" cy="10" rx="110" ry="16" fill="#162e45" opacity="0.40" filter="url(#hdr-blur)"/>
-            <ellipse cx="1650" cy="4"  rx="140" ry="20" fill="#1b3a55" opacity="0.46" filter="url(#hdr-blur)"/>
-            {/* Rain under cloud at cx~250 (x: 165–335) */}
-            {[172,192,212,232,252,272,292,312].map((x,i) => (
-              <line key={`r2a${i}`} x1={x} x2={x-1} stroke="#bfdbfe" strokeWidth="0.5" strokeLinecap="round" opacity={0.11+((i*4)%6)*0.01}>
-                <animate attributeName="y1" from={-8-(i%5)*4} to={72} dur={`${0.9+(i%4)*0.13}s`} begin={`${(i*0.22)%2.0}s`} repeatCount="indefinite"/>
-                <animate attributeName="y2" from={-8-(i%5)*4+6} to={78} dur={`${0.9+(i%4)*0.13}s`} begin={`${(i*0.22)%2.0}s`} repeatCount="indefinite"/>
-              </line>
-            ))}
-            {/* Rain under cloud at cx~550 (x: 415–685) */}
-            {[422,444,466,488,510,532,554,576,598,620,642,664].map((x,i) => (
-              <line key={`r2b${i}`} x1={x} x2={x-1} stroke="#bfdbfe" strokeWidth="0.5" strokeLinecap="round" opacity={0.12+((i*3)%7)*0.01}>
-                <animate attributeName="y1" from={-6-(i%6)*5} to={72} dur={`${0.88+(i%5)*0.14}s`} begin={`${(i*0.18)%1.7}s`} repeatCount="indefinite"/>
-                <animate attributeName="y2" from={-6-(i%6)*5+6} to={78} dur={`${0.88+(i%5)*0.14}s`} begin={`${(i*0.18)%1.7}s`} repeatCount="indefinite"/>
-              </line>
-            ))}
-            {/* Rain under cloud at cx~850 (x: 755–945) */}
-            {[762,782,802,822,842,862,882,902,922,938].map((x,i) => (
-              <line key={`r2c${i}`} x1={x} x2={x-1} stroke="#bfdbfe" strokeWidth="0.5" strokeLinecap="round" opacity={0.13+((i*5)%6)*0.01}>
-                <animate attributeName="y1" from={-9-(i%5)*4} to={72} dur={`${0.91+(i%4)*0.13}s`} begin={`${(i*0.19)%1.8}s`} repeatCount="indefinite"/>
-                <animate attributeName="y2" from={-9-(i%5)*4+6} to={78} dur={`${0.91+(i%4)*0.13}s`} begin={`${(i*0.19)%1.8}s`} repeatCount="indefinite"/>
-              </line>
-            ))}
-            {/* Rain under cloud at cx~1100 (x: 985–1215) */}
-            {[992,1014,1036,1058,1080,1102,1124,1146,1168,1190,1208].map((x,i) => (
-              <line key={`r2d${i}`} x1={x} x2={x-1} stroke="#bfdbfe" strokeWidth="0.5" strokeLinecap="round" opacity={0.12+((i*4)%7)*0.01}>
-                <animate attributeName="y1" from={-7-(i%6)*4} to={72} dur={`${0.89+(i%5)*0.12}s`} begin={`${(i*0.21)%1.9}s`} repeatCount="indefinite"/>
-                <animate attributeName="y2" from={-7-(i%6)*4+6} to={78} dur={`${0.89+(i%5)*0.12}s`} begin={`${(i*0.21)%1.9}s`} repeatCount="indefinite"/>
-              </line>
-            ))}
-            {/* Rain under cloud at cx~1400 (x: 1320–1480) */}
-            {[1328,1348,1368,1388,1408,1428,1448,1468].map((x,i) => (
-              <line key={`r2e${i}`} x1={x} x2={x-1} stroke="#bfdbfe" strokeWidth="0.5" strokeLinecap="round" opacity={0.11+((i*3)%6)*0.01}>
-                <animate attributeName="y1" from={-8-(i%5)*5} to={72} dur={`${0.86+(i%4)*0.15}s`} begin={`${(i*0.17)%1.6}s`} repeatCount="indefinite"/>
-                <animate attributeName="y2" from={-8-(i%5)*5+6} to={78} dur={`${0.86+(i%4)*0.15}s`} begin={`${(i*0.17)%1.6}s`} repeatCount="indefinite"/>
-              </line>
-            ))}
-            {/* Rain under cloud at cx~1650 (x: 1545–1755) */}
-            {[1552,1572,1592,1612,1632,1652,1672,1692,1712,1738].map((x,i) => (
-              <line key={`r2f${i}`} x1={x} x2={x-1} stroke="#bfdbfe" strokeWidth="0.5" strokeLinecap="round" opacity={0.12+((i*4)%7)*0.01}>
-                <animate attributeName="y1" from={-10-(i%5)*4} to={72} dur={`${0.92+(i%4)*0.13}s`} begin={`${(i*0.20)%1.8}s`} repeatCount="indefinite"/>
-                <animate attributeName="y2" from={-10-(i%5)*4+6} to={78} dur={`${0.92+(i%4)*0.13}s`} begin={`${(i*0.20)%1.8}s`} repeatCount="indefinite"/>
-              </line>
-            ))}
-          </g>
-        </svg>
-
-
+        />
 
         {/* Logo */}
         <a
@@ -487,8 +373,13 @@ export const Header: React.FC<HeaderProps> = ({ cvUrl, githubUrl }) => {
       {mobileMenuOpen && (
         <div
           aria-hidden="true"
-          className="fixed inset-0 bg-[var(--color-bg-primary)] md:hidden"
-          style={{ zIndex: 140 }}
+          className="fixed inset-0 md:hidden"
+          style={{
+            zIndex: 140,
+            backgroundColor: 'rgba(7, 9, 15, 0.72)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+          }}
           onClick={() => {
             setMobileMenuOpen(false);
             hamburgerRef.current?.focus();
@@ -504,14 +395,28 @@ export const Header: React.FC<HeaderProps> = ({ cvUrl, githubUrl }) => {
         aria-modal="true"
         aria-label="Navigation menu"
         className={cn(
-          'fixed inset-0 md:hidden',
+          'fixed md:hidden',
           'flex flex-col items-center justify-center gap-8',
-          'bg-[var(--color-bg-primary)]',
-          'transition-opacity',
-          isReduced ? 'duration-0' : 'duration-200',
-          mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          'rounded-2xl',
+          'transition-[opacity,transform]',
+          isReduced ? 'duration-0' : 'duration-250',
+          mobileMenuOpen ? 'opacity-100 pointer-events-auto scale-100' : 'opacity-0 pointer-events-none scale-95'
         )}
-        style={{ zIndex: 145 }}
+        style={{
+          zIndex: 145,
+          top: '72px',
+          left: '12px',
+          right: '12px',
+          bottom: 'auto',
+          minHeight: 'min-content',
+          paddingTop: '32px',
+          paddingBottom: '32px',
+          backgroundColor: 'rgba(10, 14, 26, 0.97)',
+          backdropFilter: 'blur(24px) saturate(140%)',
+          WebkitBackdropFilter: 'blur(24px) saturate(140%)',
+          border: '1px solid rgba(0, 212, 255, 0.10)',
+          boxShadow: '0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(0,212,255,0.06)',
+        }}
       >
         <nav aria-label="Mobile navigation" className="flex flex-col items-center gap-6">
           {NAV_LINKS.map((link, index) => {
