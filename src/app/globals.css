@@ -2,42 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.admin-nav-link {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 20px;
-  color: var(--color-text-secondary);
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 400;
-  transition: color 150ms, background-color 150ms;
-  border-left: 2px solid transparent;
-}
-
-.admin-nav-link:hover {
-  color: var(--color-text-primary);
-  background-color: var(--color-bg-elevated);
-}
-
-.admin-signout-btn {
-  width: 100%;
-  padding: 8px 12px;
-  background-color: transparent;
-  border: 1px solid var(--color-border-strong);
-  border-radius: 8px;
-  color: var(--color-text-secondary);
-  font-size: 13px;
-  cursor: pointer;
-  text-align: center;
-  transition: color 150ms, border-color 150ms;
-  font-family: var(--font-display);
-}
-
-.admin-signout-btn:hover {
-  color: var(--color-text-primary);
-  border-color: var(--color-accent);
-}
 :root {
   /* Background colors */
   --color-bg-primary: #07090f;
@@ -107,6 +71,43 @@
   --text-2xl: 1.5rem;     /* 24px */
   --text-3xl: 2rem;       /* 32px */
   --text-4xl: 2.5rem;     /* 40px */
+}
+
+.admin-nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 400;
+  transition: color 150ms, background-color 150ms;
+  border-left: 2px solid transparent;
+}
+
+.admin-nav-link:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-elevated);
+}
+
+.admin-signout-btn {
+  width: 100%;
+  padding: 8px 12px;
+  background-color: transparent;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 8px;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: center;
+  transition: color 150ms, border-color 150ms;
+  font-family: var(--font-display);
+}
+
+.admin-signout-btn:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-accent);
 }
 
 *,

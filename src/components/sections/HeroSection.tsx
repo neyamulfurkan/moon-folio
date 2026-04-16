@@ -234,10 +234,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ scenes, cvUrl }) => {
             </motion.p>
           </div>
 
-          {/* Fixed-height headline box — 3 lines max reserved */}
+          {/* Fixed-height headline box — 3 lines max: 64px * 1.1 * 3 = 211px, use 216px */}
           <div
             style={{
-              height: 'calc(clamp(36px, 5vw, 64px) * 1.1 * 3)',
+              height: '216px',
               marginBottom: '20px',
               overflow: 'hidden',
             }}
@@ -270,10 +270,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ scenes, cvUrl }) => {
             </h1>
           </div>
 
-          {/* Fixed-height supporting text — 3 lines reserved */}
+          {/* Fixed-height supporting text — 4 lines reserved: 16px * 1.6 * 4 = 102px */}
           <div
             style={{
-              height: 'calc(16px * 1.6 * 3)',
+              height: '102px',
               marginBottom: '32px',
               overflow: 'hidden',
             }}
@@ -342,20 +342,20 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ scenes, cvUrl }) => {
         <div
           style={{
             flexShrink: 0,
-            height: '220px',
+            height: '260px',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            marginBottom: '12px',
+            marginBottom: '8px',
           }}
         >
-          <div style={{ width: '320px', height: '300px', position: 'relative' }}>
+          <div style={{ width: '260px', height: '260px', position: 'relative' }}>
             <SparkCharacter onChatOpen={openChat} size="hero" showChat={true} onShockReady={(fn) => { sparkShockRef.current = fn; }} />
           </div>
         </div>
 
         {/* Eyebrow */}
-        <div style={{ minHeight: '20px', marginBottom: '8px', flexShrink: 0 }}>
+        <div style={{ height: '18px', marginBottom: '6px', flexShrink: 0, overflow: 'hidden' }}>
           <motion.p
             animate={{ opacity: eyebrowVisible ? 1 : 0 }}
             transition={{ duration: 0.3 }}
@@ -366,14 +366,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ scenes, cvUrl }) => {
               letterSpacing: '0.12em',
               color: 'var(--hero-accent, var(--color-accent))',
               margin: 0,
+              lineHeight: '18px',
             }}
           >
             {currentScene?.eyebrow}
           </motion.p>
         </div>
 
-        {/* Headline — fixed height */}
-        <div style={{ height: '156px', marginBottom: '8px', overflow: 'hidden', flexShrink: 0 }}>
+        {/* Headline — fixed height: 44px * 1.15 * 3 lines = ~152px, add 8px buffer */}
+        <div style={{ height: '160px', marginBottom: '8px', overflow: 'hidden', flexShrink: 0 }}>
           <h1
             style={{
               fontSize: 'clamp(28px, 7vw, 44px)',
@@ -402,8 +403,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ scenes, cvUrl }) => {
           </h1>
         </div>
 
-        {/* Supporting — fixed height */}
-        <div style={{ height: '72px', marginBottom: '16px', overflow: 'hidden', flexShrink: 0 }}>
+        {/* Supporting — 5 lines reserved: 14px * 1.6 * 5 = 112px */}
+        <div style={{ height: '112px', marginBottom: '16px', overflow: 'hidden', flexShrink: 0 }}>
           <motion.p
             animate={{ opacity: supportingVisible ? 1 : 0 }}
             transition={{ duration: 0.4 }}
